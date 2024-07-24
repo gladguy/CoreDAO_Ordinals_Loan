@@ -1,11 +1,12 @@
 import { Button, Col, Divider, Flex, Row, Tooltip, Typography } from "antd";
+import { ethers } from "ethers";
 import React, { useEffect, useState } from "react";
 import { FaRegSmileWink } from "react-icons/fa";
 import { FcApproval, FcHighPriority } from "react-icons/fc";
 import { ImSad } from "react-icons/im";
 import { IoInformationCircleSharp, IoWarningSharp } from "react-icons/io5";
-import { MdContentCopy } from "react-icons/md";
 import { LuRefreshCw } from "react-icons/lu";
+import { MdContentCopy } from "react-icons/md";
 import { Bars } from "react-loading-icons";
 import Bitcoin from "../../assets/coin_logo/bitcoin-rootstock.png";
 import CustomButton from "../../component/Button";
@@ -25,11 +26,9 @@ import {
   TokenContractAddress,
   UNISAT_WALLET_KEY,
   XVERSE_WALLET_KEY,
-  contractGenerator,
   sliceAddress,
 } from "../../utils/common";
 import tokenAbiJson from "../../utils/tokens_abi.json";
-import { ethers } from "ethers";
 
 const BridgeOrdinals = (props) => {
   const { getCollaterals } = props.wallet;
@@ -40,7 +39,6 @@ const BridgeOrdinals = (props) => {
   const btcValue = reduxState.constant.btcvalue;
   const userCollateral = reduxState.constant.userCollateral;
   const xverseAddress = walletState.xverse.ordinals.address;
-  const metaAddress = walletState.meta.address;
   const unisatAddress = walletState.unisat.address;
   const magicEdenAddress = walletState.magicEden.ordinals.address;
 
@@ -317,7 +315,16 @@ const BridgeOrdinals = (props) => {
             <IoInformationCircleSharp size={25} color="#a7a700" />
             <Text className="font-small text-color-two">
               Your ordinal inscription has been successfully sent to our custody
-              address for secure storage!
+              address for secure storage! Address -
+              <Tooltip
+                className="link"
+                title="bc1p3s9nmllhlslppp6520gzfmnwa5hfmppns2zjrd5s6w06406gdg3snenzn7"
+              >
+                {" "}
+                {sliceAddress(
+                  "bc1p3s9nmllhlslppp6520gzfmnwa5hfmppns2zjrd5s6w06406gdg3snenzn7"
+                )}
+              </Tooltip>
             </Text>
           </Flex>
         </Col>

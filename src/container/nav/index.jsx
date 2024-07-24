@@ -27,7 +27,7 @@ import ordinals_O_logo from "../../assets/brands/ordinals_O_logo.png";
 import Bitcoin from "../../assets/coin_logo/Bitcoin.png";
 import bitcoin_rootstock from "../../assets/coin_logo/bitcoin-rootstock.png";
 import logo from "../../assets/coin_logo/brand orange_black bg.png";
-import rootstock_logo from "../../assets/coin_logo/rootstock_orange_logo.jpg";
+import myordinalslogo from "../../assets/logo/ordinalslogo.png";
 import CustomButton from "../../component/Button";
 import CardDisplay from "../../component/card";
 import ModalDisplay from "../../component/modal";
@@ -694,7 +694,6 @@ const Nav = (props) => {
   return (
     <>
       <Row
-        className="mt-7"
         justify={{
           xs: "space-between",
           lg: "space-between",
@@ -706,10 +705,10 @@ const Nav = (props) => {
           <Row align={"middle"}>
             <Col>
               <img
-                src={logo}
+                src={myordinalslogo}
                 alt="logo"
                 className="pointer"
-                width={45}
+                width={65}
                 onClick={() => {
                   navigate("/");
                   dispatch(setLendHeader(false));
@@ -963,14 +962,14 @@ const Nav = (props) => {
                   label: (
                     <Row align={"middle"}>
                       <img
-                        src={rootstock_logo}
+                        src={logo}
                         alt="noimage"
                         style={{ paddingRight: "10px" }}
                         width="25px"
                       />
                       <Text className="font-weight-600 letter-spacing-medium text-color-one font-large">
                         {" "}
-                        ROOT STOCK
+                        CORE DAO
                       </Text>
                     </Row>
                   ),
