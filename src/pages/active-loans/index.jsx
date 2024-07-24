@@ -5,6 +5,8 @@ import _ from "lodash";
 import { useEffect, useState } from "react";
 import { FcInfo } from "react-icons/fc";
 import { MdOutlineConfirmationNumber } from "react-icons/md";
+import { ThreeDots } from "react-loading-icons";
+import CustomButton from "../../component/Button";
 import { propsContainer } from "../../container/props-container";
 import {
   API_METHODS,
@@ -13,16 +15,12 @@ import {
   TokenContractAddress,
 } from "../../utils/common";
 import tokenAbiJson from "../../utils/tokens_abi.json";
-import { ThreeDots } from "react-loading-icons";
-import CustomButton from "../../component/Button";
 
 const ActiveLoans = (props) => {
   const { Text, Title } = Typography;
   const { reduxState } = props.redux;
   const walletState = reduxState.wallet;
-  const constantState = reduxState.constant;
 
-  const BTC_ZERO = process.env.REACT_APP_BTC_ZERO;
   const CONTENT_API = process.env.REACT_APP_ORDINALS_CONTENT_API;
 
   const approvedCollections = reduxState.constant.approvedCollections;
@@ -236,7 +234,7 @@ const ActiveLoans = (props) => {
       ) : (
         <Row
           className={`margin-bottom ${
-            contractTokens === null || {} ? "mt-90" : "mt-15"
+            contractTokens === null ? "mt-90" : "mt-15"
           }`}
           justify={contractTokens === null ? "center" : "start"}
           gutter={[32, 32]}

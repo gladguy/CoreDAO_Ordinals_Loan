@@ -194,9 +194,6 @@ const Portfolio = (props) => {
                     ? obj?.meta?.collection_page_img_url
                     : `${process.env.PUBLIC_URL}/collections/${obj?.collectionSymbol}`
                 }`}
-                // NatBoys
-                // src={`https://ipfs.io/ipfs/QmdQboXbkTdwEa2xPkzLsCmXmgzzQg3WCxWFEnSvbnqKJr/1842.png`}
-                // src={`${process.env.PUBLIC_URL}/collections/${obj?.collectionSymbol}.png`}
                 onError={(e) =>
                   (e.target.src = `${process.env.PUBLIC_URL}/collections/${obj?.collectionSymbol}.png`)
                 }
@@ -420,7 +417,6 @@ const Portfolio = (props) => {
     const ActiveBorrowReq = await borrowContract.getActiveLoansByBorrower(
       metaAddress
     );
-    console.log("USER BORROWS");
     setUserBorrowings(ActiveBorrowReq);
   };
 
@@ -435,7 +431,6 @@ const Portfolio = (props) => {
     const UserBorrowReq = await borrowContract.getBorrowRequestsByUser(
       metaAddress
     );
-    console.log("USER REQUEST");
     setUserRequests(UserBorrowReq);
   };
 
@@ -486,8 +481,8 @@ const Portfolio = (props) => {
   }, [activeWallet]);
   console.log("userRequests", userRequests);
   console.log("userBorrowings", userBorrowings);
-  console.log("RENDERING");
-  console.log("RADIO", radioBtn);
+  console.log("userLendings", userLendings);
+  console.log("userAssets", userAssets);
   return (
     <>
       <Row justify={"space-between"} align={"middle"}>
@@ -629,16 +624,18 @@ const Portfolio = (props) => {
             <Text className="text-color-one font-medium">Connect wallet!</Text>
           ) : radioBtn === "Assets" ? (
             <Row className="mt-40 pad-bottom-30" gutter={32}>
-              <Col xl={24}>
+              <Col xs={24}>
                 <Row className="m-bottom">
-                  <Col xl={24}>
+                  <Col xs={24}>
                     <TableComponent
                       loading={{
                         spinning: userAssets === null,
                         indicator: <Bars />,
                       }}
                       pagination={{ pageSize: 5 }}
-                      rowKey={(e) => `${e?.id}-${e?.inscriptionNumber}`}
+                      rowKey={(e) =>
+                        `${e?.id}-${e?.inscriptionNumber}-${Math.random()}`
+                      }
                       tableColumns={AssetsToSupplyTableColumns}
                       tableData={userAssets}
                     />
@@ -648,16 +645,20 @@ const Portfolio = (props) => {
             </Row>
           ) : radioBtn === "Borrowings" ? (
             <Row className="mt-40 pad-bottom-30" gutter={32}>
-              <Col xl={24}>
+              <Col xs={24}>
                 <Row className="m-bottom">
-                  <Col xl={24}>
+                  <Col xs={24}>
                     <TableComponent
                       loading={{
                         spinning: userBorrowings === null,
                         indicator: <Bars />,
                       }}
                       pagination={{ pageSize: 5 }}
-                      rowKey={(e) => `${e?.id}-${e?.inscriptionNumber}`}
+                      rowKey={(e) =>
+                        `${Number(e?.tokenId)}-${Number(
+                          e?.repaymentTime
+                        )}-${Math.random()}`
+                      }
                       tableColumns={[
                         ...loanColumns,
                         {
@@ -703,16 +704,20 @@ const Portfolio = (props) => {
             </Row>
           ) : radioBtn === "Lendings" ? (
             <Row className="mt-40 pad-bottom-30" gutter={32}>
-              <Col xl={24}>
+              <Col xs={24}>
                 <Row className="m-bottom">
-                  <Col xl={24}>
+                  <Col xs={24}>
                     <TableComponent
                       loading={{
                         spinning: userLendings === null,
                         indicator: <Bars />,
                       }}
                       pagination={{ pageSize: 5 }}
-                      rowKey={(e) => `${e?.id}-${e?.inscriptionNumber}`}
+                      rowKey={(e) =>
+                        `${Number(e?.dueDate)}-${Number(
+                          e?.tokenId
+                        )}-${Math.random()}`
+                      }
                       tableColumns={loanColumns}
                       tableData={userLendings}
                     />
@@ -722,16 +727,20 @@ const Portfolio = (props) => {
             </Row>
           ) : radioBtn === "Offers" ? (
             <Row className="mt-40 pad-bottom-30" gutter={32}>
-              <Col xl={24}>
+              <Col xs={24}>
                 <Row className="m-bottom">
-                  <Col xl={24}>
+                  <Col xs={24}>
                     <TableComponent
                       loading={{
                         spinning: userRequests === null,
                         indicator: <Bars />,
                       }}
                       pagination={{ pageSize: 5 }}
-                      rowKey={(e) => `${e?.loanAmount}-${e?.requestId}`}
+                      rowKey={(e) =>
+                        `${Number(e?.createdAt)}-${Number(
+                          e?.repaymentTime
+                        )}-${Math.random()}`
+                      }
                       tableColumns={userRequestColumns}
                       tableData={userRequests}
                     />

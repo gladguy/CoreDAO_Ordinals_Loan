@@ -14,6 +14,7 @@ import {
   Tour,
   Typography,
 } from "antd";
+import { ethers } from "ethers";
 import gsap from "gsap";
 import React, { useEffect, useRef, useState } from "react";
 import { AiOutlineDisconnect } from "react-icons/ai";
@@ -25,12 +26,11 @@ import Web3 from "web3";
 import ordinals_O_logo from "../../assets/brands/ordinals_O_logo.png";
 import Bitcoin from "../../assets/coin_logo/Bitcoin.png";
 import bitcoin_rootstock from "../../assets/coin_logo/bitcoin-rootstock.png";
-import rootstock_logo from "../../assets/coin_logo/rootstock_orange_logo.jpg";
 import logo from "../../assets/coin_logo/brand orange_black bg.png";
+import rootstock_logo from "../../assets/coin_logo/rootstock_orange_logo.jpg";
 import CustomButton from "../../component/Button";
 import CardDisplay from "../../component/card";
 import ModalDisplay from "../../component/modal";
-import { ethers } from "ethers";
 import Notify from "../../component/notification";
 import {
   clearStates,
@@ -50,7 +50,6 @@ import {
   API_METHODS,
   apiUrl,
   BTCWallets,
-  contractGenerator,
   IndexContractAddress,
   MAGICEDEN_WALLET_KEY,
   META_WALLET_KEY,
@@ -61,9 +60,7 @@ import {
   XVERSE_WALLET_KEY,
 } from "../../utils/common";
 import indexJson from "../../utils/index_abi.json";
-import test from "../../utils/test.json";
 import { propsContainer } from "../props-container";
-import axios from "axios";
 
 const Nav = (props) => {
   const { Text } = Typography;
@@ -75,17 +72,11 @@ const Nav = (props) => {
   const { dispatch, reduxState } = props.redux;
 
   const walletState = reduxState.wallet;
-  const constantState = reduxState.constant;
   const activeWallet = reduxState.wallet.active;
   const metaAddress = walletState.meta.address;
   const xverseAddress = walletState.xverse.ordinals.address;
   const unisatAddress = walletState.unisat.address;
   const magicEdenAddress = walletState.magicEden.ordinals.address;
-  const address = xverseAddress
-    ? xverseAddress
-    : unisatAddress
-    ? unisatAddress
-    : magicEdenAddress;
 
   const [isConnectModal, setConnectModal] = useState(false);
   const [open, setOpen] = useState(false);
