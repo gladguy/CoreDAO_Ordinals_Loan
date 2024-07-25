@@ -1,4 +1,5 @@
 import { Actor, HttpAgent } from "@dfinity/agent";
+import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -16,6 +17,7 @@ import {
   setUserCollateral,
 } from "../../redux/slice/constant";
 import { rootstockApiFactory } from "../../rootstock_canister";
+import borrowJson from "../../utils/borrow_abi.json";
 import {
   API_METHODS,
   BorrowContractAddress,
@@ -27,12 +29,10 @@ import {
   agentCreator,
   apiUrl,
   calculateAPY,
-  contractGenerator,
+  ordinals,
   rootstock,
 } from "../../utils/common";
 import tokenAbiJson from "../../utils/tokens_abi.json";
-import borrowJson from "../../utils/borrow_abi.json";
-import { ethers } from "ethers";
 
 export const propsContainer = (Component) => {
   function ComponentWithRouterProp(props) {
@@ -78,7 +78,6 @@ export const propsContainer = (Component) => {
       ? unisatAddress
       : magicEdenAddress;
 
-    const ordinalCanisterId = process.env.REACT_APP_ORDINAL_CANISTER_ID;
     const WAHEED_ADDRESS = process.env.REACT_APP_WAHEED_ADDRESS;
 
     const btcPrice = async () => {
@@ -112,7 +111,7 @@ export const propsContainer = (Component) => {
 
             const agent = Actor.createActor(apiFactory, {
               agent: ordinalAgent,
-              canisterId: ordinalCanisterId,
+              canisterId: ordinals,
             });
 
             dispatch(setAgent(agent));
@@ -322,8 +321,8 @@ export const propsContainer = (Component) => {
     };
 
     const fetchCoreDaoPrice = async () => {
-      let ONE_MINUTE = 60;
-      const unixTimestampSeconds = Math.floor(new Date().getTime() / 1000);
+      // let ONE_MINUTE = 60;
+      // const unixTimestampSeconds = Math.floor(new Date().getTime() / 1000);
       try {
         // const coreDaoData = await API_METHODS.get(
         //   `${apiUrl.Coin_base_url}/products/APT-USD/candles?start=${Math.floor(

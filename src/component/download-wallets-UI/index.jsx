@@ -1,17 +1,14 @@
 import { Col, Row, Typography } from "antd";
 import { IoCloudDownload } from "react-icons/io5";
 import { Link } from "react-router-dom";
-import claimed from "../../assets/airdrop/claimed.png";
-import plug from "../../assets/wallet-logo/plug_logo.png";
-import unisat from "../../assets/wallet-logo/unisat_logo.png";
-import myordinals from "../../assets/logo/ordinalslogo.png";
-import xverse from "../../assets/wallet-logo/xverse_logo_whitebg.png";
-import petra from "../../assets/wallet-logo/petra.png";
 import magiceden from "../../assets/brands/magiceden.svg";
+import myordinals from "../../assets/logo/ordinalslogo.png";
+import petra from "../../assets/wallet-logo/petra.png";
+import unisat from "../../assets/wallet-logo/unisat_logo.png";
+import xverse from "../../assets/wallet-logo/xverse_logo_whitebg.png";
 
 const WalletUI = ({ isAirdrop, isPlugError }) => {
   const { Text } = Typography;
-  const plugLink = process.env.REACT_APP_PLUG;
   const unisatLink = process.env.REACT_APP_UNISAT;
   const xverseLink = process.env.REACT_APP_XVERSE;
   const magicedenLink = process.env.REACT_APP_MAGICEDEN;
@@ -22,7 +19,7 @@ const WalletUI = ({ isAirdrop, isPlugError }) => {
       <Row justify={"center"} className="mt-70">
         <img
           className="egg airdrop_claimed"
-          src={isAirdrop ? claimed : myordinals}
+          src={myordinals}
           alt="noimage"
           style={{ justifyContent: "center", borderRadius: "25%" }}
           width="80dvw"
@@ -64,20 +61,6 @@ const WalletUI = ({ isAirdrop, isPlugError }) => {
               align={"middle"}
               className="mt-20 walletsCard"
             >
-              <Col>
-                <Link
-                  className="iconalignment float-up-medium"
-                  target="_blank"
-                  to={plugLink}
-                >
-                  <img
-                    src={plug}
-                    alt="logo"
-                    className="pointer"
-                    width="60dvw"
-                  />
-                </Link>
-              </Col>
               <Col>
                 <Link
                   className="iconalignment float-up-medium"

@@ -2500,7 +2500,7 @@ figure:hover+span {
 }
 
 .bg-cards {
-  background-image: url("./assets/card.png");
+  /* background-image: url("./assets/card.png"); */
   background-size: contain;
   background-repeat: no-repeat;
   background-size: 100%;

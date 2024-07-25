@@ -15,7 +15,6 @@ import { setOffers } from "../../redux/slice/constant";
 
 const Lending = (props) => {
   const { reduxState, dispatch } = props.redux;
-  const { getAllBorrowRequests } = props.wallet;
   const approvedCollections = reduxState.constant.approvedCollections;
   const userAssets = reduxState.constant.userAssets;
   const allBorrowRequest = reduxState.constant.allBorrowRequest;
