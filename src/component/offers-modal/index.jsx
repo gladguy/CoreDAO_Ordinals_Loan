@@ -43,7 +43,9 @@ const OffersModal = ({
       align: "center",
       dataIndex: "loanToValue",
       render: (_, obj) => {
-        const floor = Number(offerModalData.floorPrice);
+        const floor = Number(offerModalData.floorPrice)
+          ? Number(offerModalData.floorPrice)
+          : 30000;
         const loanAmount = Number(obj.loanAmount) / BTC_ZERO;
         const LTV = Math.round(loanAmount / floor);
         return (
@@ -75,7 +77,7 @@ const OffersModal = ({
     >
       <Row justify={"center"}>
         <Text className={"gradient-text-one font-xlarge letter-spacing-small"}>
-          Requests on {offerModalData.collectionName}
+          Accept Loan on {offerModalData.collectionName}
         </Text>
       </Row>
 
@@ -117,7 +119,9 @@ const OffersModal = ({
                     align: "center",
                     dataIndex: "borrow",
                     render: (_, obj) => {
-                      const floor = Number(offerModalData.floorPrice);
+                      const floor = Number(offerModalData.floorPrice)
+                        ? Number(offerModalData.floorPrice)
+                        : 30000;
                       const loanAmount = Number(obj.loanAmount) / BTC_ZERO;
                       const LTV = Math.round(loanAmount / floor);
                       return (

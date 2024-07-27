@@ -479,10 +479,10 @@ const Portfolio = (props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeWallet]);
-  console.log("userRequests", userRequests);
-  console.log("userBorrowings", userBorrowings);
-  console.log("userLendings", userLendings);
-  console.log("userAssets", userAssets);
+  // console.log("userRequests", userRequests);
+  // console.log("userBorrowings", userBorrowings);
+  // console.log("userLendings", userLendings);
+  // console.log("userAssets", userAssets);
   return (
     <>
       <Row justify={"space-between"} align={"middle"}>

@@ -425,8 +425,6 @@ const Nav = (props) => {
       setFinishBtn(true);
       const web3 = new Web3(window.ethereum);
       const networkId = await web3.eth.net.getId();
-      const accounts = await web3.eth.getAccounts();
-      console.log("accounts", accounts);
       if (Number(networkId) !== 1115) {
         Notify("error", "Switch to the coreDAO network!");
         return;
@@ -496,7 +494,7 @@ const Nav = (props) => {
           "Account not found, try connecting other BTC account!"
         );
       }
-      console.log("isConnectionExist", isConnectionExist);
+
       if (isConnectionExist) {
         activeConnections.forEach((wallet) => {
           storeWallets(wallet);

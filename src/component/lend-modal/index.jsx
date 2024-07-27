@@ -63,7 +63,6 @@ const LendModal = ({
 
       const requestId = Number(lendModalData.requestId);
       const loanAmount = Number(lendModalData.loanAmount);
-      console.log("lendModalData.requestId", lendModalData.requestId);
       const acceptLoan = await borrowContract.acceptBorrowRequest(requestId, {
         value: loanAmount,
       });
@@ -211,7 +210,7 @@ const LendModal = ({
                   <Text
                     className={`font-small text-color-one letter-spacing-small`}
                   >
-                    Request Summary
+                    Accept Summary
                   </Text>
                 ),
                 children: (

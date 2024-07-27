@@ -1,7 +1,7 @@
 import { Button, Col, Divider, Flex, Row, Tooltip, Typography } from "antd";
 import { ethers } from "ethers";
 import React, { useEffect, useState } from "react";
-import { FaRegSmileWink } from "react-icons/fa";
+import { FaCopy, FaRegSmileWink } from "react-icons/fa";
 import { FcApproval, FcHighPriority } from "react-icons/fc";
 import { ImSad } from "react-icons/im";
 import { IoInformationCircleSharp, IoWarningSharp } from "react-icons/io5";
@@ -29,6 +29,8 @@ import {
   sliceAddress,
 } from "../../utils/common";
 import tokenAbiJson from "../../utils/tokens_abi.json";
+import { Link } from "react-router-dom";
+import { PiCopyBold } from "react-icons/pi";
 
 const BridgeOrdinals = (props) => {
   const { getCollaterals } = props.wallet;
@@ -96,7 +98,6 @@ const BridgeOrdinals = (props) => {
   ];
 
   const handleTokenMint = async (inscriptionNumber) => {
-    console.log("inscriptionNumber", inscriptionNumber);
     try {
       dispatch(setLoading(true));
       const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -108,7 +109,6 @@ const BridgeOrdinals = (props) => {
       );
 
       const mintResult = await contract.mintOrdinal(inscriptionNumber);
-      console.log("mintResult", mintResult);
       if (mintResult.hash) {
         Notify("success", "Minting success!");
         setInterval(() => {
@@ -314,36 +314,59 @@ const BridgeOrdinals = (props) => {
           <Flex className="page-box" align="center" gap={3}>
             <IoInformationCircleSharp size={25} color="#a7a700" />
             <Text className="font-small text-color-two">
-              Your ordinal inscription has been successfully sent to our custody
-              address for secure storage! Address -
-              <Tooltip
-                className="link"
-                title="bc1p3s9nmllhlslppp6520gzfmnwa5hfmppns2zjrd5s6w06406gdg3snenzn7"
+              Your ordinal inscription stored in custody address. Address -
+              <Link
+                to={
+                  "https://ordiscan.com/address/bc1pjj4uzw3svyhezxqq7cvqdxzf48kfhklxuahyx8v8u69uqfmt0udqlhwhwz"
+                }
+                target="_blank"
               >
-                {" "}
-                {sliceAddress(
-                  "bc1p3s9nmllhlslppp6520gzfmnwa5hfmppns2zjrd5s6w06406gdg3snenzn7"
-                )}
+                <Tooltip
+                  className="link"
+                  title="bc1pjj4uzw3svyhezxqq7cvqdxzf48kfhklxuahyx8v8u69uqfmt0udqlhwhwz"
+                >
+                  {" "}
+                  {sliceAddress(
+                    "bc1pjj4uzw3svyhezxqq7cvqdxzf48kfhklxuahyx8v8u69uqfmt0udqlhwhwz"
+                  )}
+                </Tooltip>
+                .
+              </Link>{" "}
+              <Tooltip title="Copied" trigger={"click"}>
+                <PiCopyBold
+                  className="pointer"
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      "bc1pjj4uzw3svyhezxqq7cvqdxzf48kfhklxuahyx8v8u69uqfmt0udqlhwhwz"
+                    );
+                  }}
+                  size={15}
+                />{" "}
               </Tooltip>
+              Ordinals sent will reflect here in 15 minutes.{" "}
             </Text>
           </Flex>
         </Col>
       </Row>
 
       <Row justify={"end"} align={"middle"} className="mt-20">
-        <Col
-          onClick={() => {
-            dispatch(setBorrowCollateral(null));
-            dispatch(setUserCollateral(null));
-            getCollaterals();
-          }}
-        >
-          <LuRefreshCw
-            className={`pointer ${userCollateral === null ? "spin" : ""}`}
-            color="whitesmoke"
-            size={25}
-          />
-        </Col>
+        {activeWallet.length ? (
+          <Col
+            onClick={() => {
+              dispatch(setBorrowCollateral(null));
+              dispatch(setUserCollateral(null));
+              getCollaterals();
+            }}
+          >
+            <LuRefreshCw
+              className={`pointer ${userCollateral === null ? "spin" : ""}`}
+              color="whitesmoke"
+              size={25}
+            />
+          </Col>
+        ) : (
+          ""
+        )}
       </Row>
 
       {walletState.active.includes(XVERSE_WALLET_KEY) ||

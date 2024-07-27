@@ -92,7 +92,7 @@ const Borrowing = (props) => {
           let assets = collateralData?.filter(
             (p) => p.collectionSymbol === record.symbol
           );
-          if (assets.length) {
+          if (assets?.length) {
             return record;
           }
         } else {
@@ -149,7 +149,7 @@ const Borrowing = (props) => {
                   className={`text-color-one grey-bg-color border-radius-30 card-box pointer border-color-dark iconalignment shine font-size-16 letter-spacing-small`}
                 >
                   <BiSolidOffer size={20} />
-                  Requests
+                  Accept
                 </Text>
               </Flex>
             </Col>
@@ -285,6 +285,7 @@ const Borrowing = (props) => {
                 APY: obj.APY,
                 interestTerm,
                 interestPerDay,
+                floorPrice: floor,
                 sliderLTV: obj.LTV ? obj.LTV : sliderLTV,
               });
             }}
@@ -354,7 +355,11 @@ const Borrowing = (props) => {
 
       const finalData = revealed.filter((asset) => !asset.request?.requestId);
 
-      setCollateralData(finalData);
+      if (finalData?.length) {
+        setCollateralData(finalData);
+      } else {
+        setCollateralData([]);
+      }
     } catch (error) {
       console.log("request fetching error", error);
     }
@@ -386,15 +391,11 @@ const Borrowing = (props) => {
         );
 
         if (!isApproved) {
-          const approveResult = await tokensContract.setApprovalForAll(
-            BorrowContractAddress,
-            true
-          );
+          await tokensContract.setApprovalForAll(BorrowContractAddress, true);
           isApproved = await tokensContract.isApprovedForAll(
             metaAddress,
             BorrowContractAddress
           );
-          console.log("Approve result", approveResult);
         }
 
         if (isApproved) {
@@ -461,6 +462,10 @@ const Borrowing = (props) => {
   useEffect(() => {
     if (activeWallet.length && borrowCollateral?.length && isEthConnected) {
       fetchBorrowRequests();
+    }
+
+    if (!borrowCollateral?.length) {
+      setCollateralData([]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeWallet, borrowCollateral, isEthConnected]);
@@ -576,7 +581,7 @@ const Borrowing = (props) => {
                   style={{ justifyContent: "center" }}
                   width={15}
                 />{" "}
-                {(borrowModalData.floorPrice / BTC_ZERO).toFixed(3)}
+                {(borrowModalData.floorPrice / BTC_ZERO).toFixed(4)}
               </Text>
             </Flex>
           </Col>

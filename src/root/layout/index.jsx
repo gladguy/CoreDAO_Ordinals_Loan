@@ -197,6 +197,13 @@ const MainLayout = () => {
                             />
                             <Text
                               className={`gradient-text-one ${
+                                screens.xs ? "font-xssmall" : "font-medium"
+                              } font-family-one letter-spacing-small`}
+                            >
+                              My Ordinals.Loan - Coredao
+                            </Text>
+                            <Text
+                              className={`gradient-text-one ${
                                 screens.xs ? "font-xssmall" : "font-small"
                               } font-family-one letter-spacing-small`}
                             >

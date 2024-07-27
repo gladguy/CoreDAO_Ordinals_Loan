@@ -120,7 +120,8 @@ a {
 }
 
 .theme-bg {
-  background-image: radial-gradient(circle at top left, #06122e 17%, #040d22 36%, #311d3e 32%, #311d3e 70%, #5e263e 48%, #5e263e 65%);
+  /* background-image: radial-gradient(circle at top left, #06122e 17%, #040d22 36%, #311d3e 32%, #311d3e 70%, #5e263e 48%, #5e263e 65%); */
+  background: #01050f;
   border: none;
   height: 100%;
   background-attachment: fixed;

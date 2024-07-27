@@ -229,6 +229,8 @@ export const propsContainer = (Component) => {
           );
           const finalPromise = await getCollectionDetails(filteredData);
           return finalPromise;
+        } else {
+          return [];
         }
       } catch (error) {
         console.log("error", error);
@@ -236,7 +238,6 @@ export const propsContainer = (Component) => {
     };
 
     const getCollaterals = async () => {
-      console.log("Fetching...........................");
       let colResult = [];
       try {
         const API = agentCreator(rootstockApiFactory, rootstock);

@@ -98,7 +98,7 @@ const Lending = (props) => {
                   className={`text-color-one grey-bg-color border-radius-30 card-box pointer border-color-dark iconalignment shine font-size-16 letter-spacing-small`}
                 >
                   <BiSolidOffer size={20} />
-                  Requests
+                  Accept
                 </Text>
               </Flex>
             </Col>
@@ -184,14 +184,16 @@ const Lending = (props) => {
             title={"Lend"}
             size="medium"
             onClick={() => {
-              toggleLendModal();
-              setLendModalData({
-                collateral: "",
-                symbol: obj.symbol,
-                canisterId: obj.canister,
-                collectionName: obj.name,
-                thumbnailURI: obj.thumbnailURI,
-              });
+              fetchRequests(obj);
+
+              // toggleLendModal();
+              // setLendModalData({
+              //   collateral: "",
+              //   symbol: obj.symbol,
+              //   canisterId: obj.canister,
+              //   collectionName: obj.name,
+              //   thumbnailURI: obj.thumbnailURI,
+              // });
             }}
           />
         );
@@ -209,7 +211,7 @@ const Lending = (props) => {
         const collectionBorrowRequests = allBorrowRequest.filter(
           (req) => Number(req.collectionId) === Number(obj.collectionID)
         );
-        console.log("collectionBorrowRequests", collectionBorrowRequests);
+
         dispatch(setOffers(collectionBorrowRequests));
         toggleOfferModal();
         setOfferModalData({
