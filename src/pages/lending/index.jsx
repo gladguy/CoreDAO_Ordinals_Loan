@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { BiSolidOffer } from "react-icons/bi";
 import { MdOutlineTimer } from "react-icons/md";
 import { Bars } from "react-loading-icons";
-import Bitcoin from "../../assets/coin_logo/bitcoin-rootstock.png";
+import Bitcoin from "../../assets/coin_logo/brand orange_black bg.png";
 import CustomButton from "../../component/Button";
 import CardDisplay from "../../component/card";
 import LendModal from "../../component/lend-modal";
@@ -20,6 +20,7 @@ const Lending = (props) => {
   const allBorrowRequest = reduxState.constant.allBorrowRequest;
 
   const btcvalue = reduxState.constant.btcvalue;
+  const coreDaoValue = reduxState.constant.coreDaoValue;
 
   const { Text } = Typography;
   const { useBreakpoint } = Grid;
@@ -164,7 +165,7 @@ const Lending = (props) => {
             <Flex align="center" vertical gap={5} className={"text-color-one"}>
               <Flex align="center" gap={3}>
                 <img src={Bitcoin} alt="noimage" width="20px" />{" "}
-                {(floor / BTC_ZERO).toFixed(4)}{" "}
+                {(((floor / BTC_ZERO) * btcvalue) / coreDaoValue).toFixed(2)}{" "}
               </Flex>
               <div>${((floor / BTC_ZERO) * btcvalue).toFixed(2)} </div>
             </Flex>

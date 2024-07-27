@@ -18,7 +18,7 @@ import { HiMiniReceiptPercent } from "react-icons/hi2";
 import { IoWarningSharp } from "react-icons/io5";
 import { MdContentCopy, MdDeleteForever, MdTour } from "react-icons/md";
 import { Bars } from "react-loading-icons";
-import Bitcoin from "../../assets/coin_logo/bitcoin-rootstock.png";
+import Bitcoin from "../../assets/coin_logo/brand orange_black bg.png";
 import CustomButton from "../../component/Button";
 import WalletUI from "../../component/download-wallets-UI";
 import ModalDisplay from "../../component/modal";
@@ -44,6 +44,7 @@ const Portfolio = (props) => {
   // const unisatAddress = walletState.unisat.address;
   // const magicEdenAddress = walletState.magicEden.ordinals.address;
   const btcValue = reduxState.constant.btcvalue;
+  const coreDaoValue = reduxState.constant.coreDaoValue;
   const metaAddress = walletState.meta.address;
   // const address = xverseAddress
   //   ? xverseAddress
@@ -214,6 +215,9 @@ const Portfolio = (props) => {
       align: "center",
       dataIndex: "value",
       render: (_, obj) => {
+        const floor = Number(obj.collection.floorPrice)
+          ? Number(obj.collection.floorPrice)
+          : 30000;
         return (
           <>
             {obj.collection.floorPrice ? (
@@ -223,15 +227,13 @@ const Portfolio = (props) => {
                   gap={3}
                   className="text-color-one font-small letter-spacing-small"
                 >
-                  <img src={Bitcoin} alt="noimage" width={20} height={20} />
-                  {(obj.collection.floorPrice / BTC_ZERO).toFixed(2)}
+                  <img src={Bitcoin} alt="noimage" width={20} />
+                  {(((floor / BTC_ZERO) * btcValue) / coreDaoValue).toFixed(
+                    2
+                  )}{" "}
                 </Flex>
                 <span className="text-color-two font-xsmall letter-spacing-small">
-                  ${" "}
-                  {(
-                    (Number(obj.collection.floorPrice) / BTC_ZERO) *
-                    btcValue
-                  ).toFixed(2)}
+                  $ {((floor / BTC_ZERO) * btcValue).toFixed(2)}
                 </span>
               </Flex>
             ) : (
@@ -346,7 +348,7 @@ const Portfolio = (props) => {
       dataIndex: "loanAmount",
       render: (_, obj) => (
         <Flex align="center" justify="center" gap={3}>
-          <img src={Bitcoin} alt="noimage" width="20px" />{" "}
+          <img src={Bitcoin} alt="noimage" width={20} />{" "}
           <Text className="text-color-one">
             {Number(obj.loanAmount) / BTC_ZERO}
           </Text>
@@ -360,7 +362,7 @@ const Portfolio = (props) => {
       dataIndex: "platformFee",
       render: (_, obj) => (
         <Flex align="center" justify="center" gap={3}>
-          <img src={Bitcoin} alt="noimage" width="20px" />{" "}
+          <img src={Bitcoin} alt="noimage" width={20} />{" "}
           <Text className="text-color-one">
             {Number(obj.platformFee) / BTC_ZERO}
           </Text>
@@ -374,7 +376,7 @@ const Portfolio = (props) => {
       dataIndex: "repayAmount",
       render: (_, obj) => (
         <Flex align="center" justify="center" gap={3}>
-          <img src={Bitcoin} alt="noimage" width="20px" />{" "}
+          <img src={Bitcoin} alt="noimage" width={20} />{" "}
           <Text className="text-color-one">
             {(Number(obj.repayAmount) / BTC_ZERO).toFixed(2)}
           </Text>
@@ -483,6 +485,7 @@ const Portfolio = (props) => {
   // console.log("userBorrowings", userBorrowings);
   // console.log("userLendings", userLendings);
   // console.log("userAssets", userAssets);
+  console.log("supplyModalItems", supplyModalItems);
   return (
     <>
       <Row justify={"space-between"} align={"middle"}>
@@ -786,7 +789,7 @@ const Portfolio = (props) => {
       <ModalDisplay
         width={"50%"}
         title={
-          <Row className="black-bg white-color font-large letter-spacing-small">
+          <Row className="white-color font-large letter-spacing-small">
             Details
           </Row>
         }
@@ -804,37 +807,66 @@ const Portfolio = (props) => {
           <Col md={18}>
             <Row>
               <Col md={12}>
-                {supplyModalItems &&
-                  (supplyModalItems?.mimeType === "text/html" ? (
-                    <iframe
-                      className="border-radius-30"
-                      title={`${supplyModalItems?.id}-borrow_image`}
-                      height={300}
-                      width={300}
-                      src={`${CONTENT_API}/content/${supplyModalItems?.id}`}
-                    />
-                  ) : (
-                    <>
-                      <img
-                        src={`${CONTENT_API}/content/${supplyModalItems?.id}`}
-                        alt={`${supplyModalItems?.id}-borrow_image`}
-                        className="border-radius-30"
-                        width={125}
-                      />
-                      <Row>
-                        <Text className="text-color-one ml">
-                          <span className="font-weight-600 font-small ">
-                            ${" "}
-                          </span>
-                          {(
-                            (Number(supplyModalItems?.collection?.floorPrice) /
-                              BTC_ZERO) *
-                            btcValue
-                          ).toFixed(2)}
-                        </Text>
-                      </Row>
-                    </>
-                  ))}
+                {supplyModalItems && (
+                  <>
+                    <Flex gap={5} vertical align="center">
+                      {supplyModalItems.contentType === "image/webp" ||
+                      supplyModalItems.contentType === "image/jpeg" ||
+                      supplyModalItems.contentType === "image/png" ? (
+                        <img
+                          src={`${CONTENT_API}/content/${supplyModalItems.id}`}
+                          alt={`${supplyModalItems.id}-borrow_image`}
+                          className="border-radius-30"
+                          width={70}
+                          height={70}
+                        />
+                      ) : supplyModalItems.contentType === "image/svg" ||
+                        supplyModalItems.contentType ===
+                          "text/html;charset=utf-8" ||
+                        supplyModalItems.contentType === "text/html" ||
+                        supplyModalItems.contentType === "image/svg+xml" ? (
+                        <iframe
+                          loading="lazy"
+                          width={"80px"}
+                          height={"80px"}
+                          style={{ border: "none", borderRadius: "20%" }}
+                          src={`${CONTENT_API}/content/${supplyModalItems.id}`}
+                          title="svg"
+                          sandbox="allow-scripts"
+                        >
+                          <svg
+                            viewBox="0 0 100 100"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <image
+                              href={`${CONTENT_API}/content/${supplyModalItems.id}`}
+                            />
+                          </svg>
+                        </iframe>
+                      ) : (
+                        <img
+                          src={`${
+                            supplyModalItems?.meta?.collection_page_img_url
+                              ? supplyModalItems?.meta?.collection_page_img_url
+                              : `${process.env.PUBLIC_URL}/collections/${supplyModalItems?.collectionSymbol}`
+                          }`}
+                          // NatBoys
+                          // src={`https://ipfs.io/ipfs/QmdQboXbkTdwEa2xPkzLsCmXmgzzQg3WCxWFEnSvbnqKJr/1842.png`}
+                          // src={`${process.env.PUBLIC_URL}/collections/${supplyModalItems?.collectionSymbol}.png`}
+                          onError={(e) =>
+                            (e.target.src = `${process.env.PUBLIC_URL}/collections/${supplyModalItems?.collectionSymbol}.png`)
+                          }
+                          alt={`${supplyModalItems.id}-borrow_image`}
+                          className="border-radius-30"
+                          width={70}
+                          height={70}
+                        />
+                      )}
+                      {Capitalaize(supplyModalItems.collectionSymbol)} - #
+                      {supplyModalItems.inscriptionNumber}
+                    </Flex>
+                  </>
+                )}
               </Col>
 
               <Col md={12}>

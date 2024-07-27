@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FaCaretDown } from "react-icons/fa";
 import { TbInfoSquareRounded } from "react-icons/tb";
 import { useSelector } from "react-redux";
-import Bitcoin from "../../assets/coin_logo/bitcoin-rootstock.png";
+import Bitcoin from "../../assets/coin_logo/brand orange_black bg.png";
 import borrowJson from "../../utils/borrow_abi.json";
 import {
   BorrowContractAddress,

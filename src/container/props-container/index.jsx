@@ -355,14 +355,7 @@ export const propsContainer = (Component) => {
 
     useEffect(() => {
       (async () => {
-        if (
-          api_agent &&
-          (activeWallet.includes(XVERSE_WALLET_KEY) ||
-            activeWallet.includes(UNISAT_WALLET_KEY) ||
-            activeWallet.includes(MAGICEDEN_WALLET_KEY)) &&
-          collections[0]?.symbol &&
-          !userAssets
-        ) {
+        if (activeWallet.length && collections[0]?.symbol && !userAssets) {
           const result = await fetchWalletAssets(
             IS_USER
               ? xverseAddress
@@ -372,7 +365,7 @@ export const propsContainer = (Component) => {
                 : magicEdenAddress
               : WAHEED_ADDRESS
           );
-
+          console.log("result", result);
           const testData = result?.reduce((acc, curr) => {
             // Find if there is an existing item with the same collectionSymbol
             let existingItem = acc.find(
@@ -406,7 +399,7 @@ export const propsContainer = (Component) => {
         }
       })();
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activeWallet, api_agent, dispatch, collections]);
+    }, [activeWallet, collections]);
 
     useEffect(() => {
       if (activeWallet.length && approvedCollections[0]) {

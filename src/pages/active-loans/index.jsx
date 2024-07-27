@@ -244,13 +244,14 @@ const ActiveLoans = (props) => {
             <>
               {Object?.keys(contractTokens)?.length ? (
                 <>
-                  {Object?.entries(contractTokens)?.map((asset) => {
+                  {Object?.entries(contractTokens)?.map((asset, index) => {
                     const [collectionName, assets] = asset;
                     const [_one] = assets;
 
                     return (
                       <>
                         <Col
+                          key={`${collectionName}-${index}-${Math.random()}`}
                           md={4}
                           onClick={() => setCollectionName(collectionName)}
                         >

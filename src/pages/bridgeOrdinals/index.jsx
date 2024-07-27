@@ -1,14 +1,16 @@
 import { Button, Col, Divider, Flex, Row, Tooltip, Typography } from "antd";
 import { ethers } from "ethers";
 import React, { useEffect, useState } from "react";
-import { FaCopy, FaRegSmileWink } from "react-icons/fa";
+import { FaRegSmileWink } from "react-icons/fa";
 import { FcApproval, FcHighPriority } from "react-icons/fc";
 import { ImSad } from "react-icons/im";
 import { IoInformationCircleSharp, IoWarningSharp } from "react-icons/io5";
 import { LuRefreshCw } from "react-icons/lu";
 import { MdContentCopy } from "react-icons/md";
+import { PiCopyBold } from "react-icons/pi";
 import { Bars } from "react-loading-icons";
-import Bitcoin from "../../assets/coin_logo/bitcoin-rootstock.png";
+import { Link } from "react-router-dom";
+import Bitcoin from "../../assets/coin_logo/brand orange_black bg.png";
 import CustomButton from "../../component/Button";
 import ModalDisplay from "../../component/modal";
 import Notify from "../../component/notification";
@@ -29,8 +31,6 @@ import {
   sliceAddress,
 } from "../../utils/common";
 import tokenAbiJson from "../../utils/tokens_abi.json";
-import { Link } from "react-router-dom";
-import { PiCopyBold } from "react-icons/pi";
 
 const BridgeOrdinals = (props) => {
   const { getCollaterals } = props.wallet;
@@ -39,6 +39,7 @@ const BridgeOrdinals = (props) => {
 
   const walletState = reduxState.wallet;
   const btcValue = reduxState.constant.btcvalue;
+  const coreDaoValue = reduxState.constant.coreDaoValue;
   const userCollateral = reduxState.constant.userCollateral;
   const xverseAddress = walletState.xverse.ordinals.address;
   const unisatAddress = walletState.unisat.address;
@@ -230,23 +231,23 @@ const BridgeOrdinals = (props) => {
       dataIndex: "value",
       render: (_, obj) => {
         const floor = Number(obj.collection.floorPrice)
-          ? Number(obj.collection.floorPrice) / BTC_ZERO
-          : 25000 / BTC_ZERO;
+          ? Number(obj.collection.floorPrice)
+          : 30000;
         return (
           <>
             <Flex vertical align="center">
               <Flex
                 align="center"
                 gap={3}
-                className="text-color-one font-small letter-spacing-small"
+                className="text-color-one font-xsmall letter-spacing-small"
               >
                 <img src={Bitcoin} alt="noimage" width={20} height={20} />
-                {parseInt(floor.toFixed(2))
-                  ? floor.toFixed(2)
-                  : floor.toFixed(4)}
+                {(((floor / BTC_ZERO) * btcValue) / coreDaoValue).toFixed(
+                  2
+                )}{" "}
               </Flex>
               <span className="text-color-two font-xsmall letter-spacing-small">
-                $ {(floor * btcValue).toFixed(2)}
+                ${((floor / BTC_ZERO) * btcValue).toFixed(2)}
               </span>
             </Flex>
           </>

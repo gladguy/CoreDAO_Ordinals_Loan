@@ -18,7 +18,7 @@ import { IoInformationCircleSharp } from "react-icons/io5";
 import { PiPlusSquareThin } from "react-icons/pi";
 import { TbInfoSquareRounded } from "react-icons/tb";
 import { Bars } from "react-loading-icons";
-import Bitcoin from "../../assets/coin_logo/bitcoin-rootstock.png";
+import Bitcoin from "../../assets/coin_logo/brand orange_black bg.png";
 import CustomButton from "../../component/Button";
 import CardDisplay from "../../component/card";
 import LendModal from "../../component/lend-modal";
@@ -48,6 +48,7 @@ const Borrowing = (props) => {
   const metaAddress = reduxState.wallet.meta.address;
 
   const btcvalue = reduxState.constant.btcvalue;
+  const coreDaoValue = reduxState.constant.coreDaoValue;
 
   const CONTENT_API = process.env.REACT_APP_ORDINALS_CONTENT_API;
 
@@ -68,6 +69,7 @@ const Borrowing = (props) => {
 
   const [collapseActiveKey, setCollapseActiveKey] = useState(["2"]);
   const [isRequestBtnLoading, setIsRequestBtnLoading] = useState(false);
+  const [isBorrowApproved, setIsBorrowApproved] = useState(null);
   const BTC_ZERO = process.env.REACT_APP_BTC_ZERO;
   const ETH_ZERO = process.env.REACT_APP_ETH_ZERO;
 
@@ -215,7 +217,7 @@ const Borrowing = (props) => {
             <Flex align="center" vertical gap={5} className={"text-color-one"}>
               <Flex align="center" gap={3}>
                 <img src={Bitcoin} alt="noimage" width="20px" />{" "}
-                {(floor / BTC_ZERO).toFixed(4)}{" "}
+                {(((floor / BTC_ZERO) * btcvalue) / coreDaoValue).toFixed(2)}{" "}
               </Flex>
               <div>${((floor / BTC_ZERO) * btcvalue).toFixed(2)} </div>
             </Flex>
@@ -371,34 +373,14 @@ const Borrowing = (props) => {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
 
-      const tokensContract = new ethers.Contract(
-        TokenContractAddress,
-        tokensJson,
-        signer
-      );
-
       const borrowContract = new ethers.Contract(
         BorrowContractAddress,
         borrowJson,
         signer
       );
-      // const API = agentCreator(rootstockApiFactory, rootstock);
 
       try {
-        let isApproved = await tokensContract.isApprovedForAll(
-          metaAddress,
-          BorrowContractAddress
-        );
-
-        if (!isApproved) {
-          await tokensContract.setApprovalForAll(BorrowContractAddress, true);
-          isApproved = await tokensContract.isApprovedForAll(
-            metaAddress,
-            BorrowContractAddress
-          );
-        }
-
-        if (isApproved) {
+        if (isBorrowApproved) {
           const amount = borrowModalData.amount * ETH_ZERO;
           const platformFee = Number(borrowModalData.platformFee);
           const repaymentAmount =
@@ -445,6 +427,38 @@ const Borrowing = (props) => {
     setCollapseActiveKey(["1"]);
   };
 
+  const approveBorrowRequest = async () => {
+    setIsRequestBtnLoading(true);
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+
+    const tokensContract = new ethers.Contract(
+      TokenContractAddress,
+      tokensJson,
+      signer
+    );
+
+    let isApproved = await tokensContract.isApprovedForAll(
+      metaAddress,
+      BorrowContractAddress
+    );
+
+    if (isApproved) {
+      setIsBorrowApproved(isApproved);
+      setIsRequestBtnLoading(false);
+    } else {
+      await tokensContract.setApprovalForAll(BorrowContractAddress, true);
+      setTimeout(async () => {
+        isApproved = await tokensContract.isApprovedForAll(
+          metaAddress,
+          BorrowContractAddress
+        );
+        setIsBorrowApproved(isApproved);
+        setIsRequestBtnLoading(false);
+      }, [3000]);
+    }
+  };
+
   useEffect(() => {
     // For setting user assets, after fetching user collateral when modal is open
     if (borrowCollateral?.length && borrowModalData?.symbol) {
@@ -470,6 +484,14 @@ const Borrowing = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeWallet, borrowCollateral, isEthConnected]);
 
+  useEffect(() => {
+    if (activeWallet.length) {
+      approveBorrowRequest();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeWallet]);
+
+  // console.log("isBorrowApproved", isBorrowApproved);
   // console.log("borrowModalData", borrowModalData);
   return (
     <>
@@ -1152,9 +1174,16 @@ const Borrowing = (props) => {
               <CustomButton
                 block
                 loading={isRequestBtnLoading}
+                disabled={isBorrowApproved === null}
                 className="click-btn font-weight-600 letter-spacing-small"
-                title={"Create request"}
-                onClick={handleCreateRequest}
+                title={isBorrowApproved ? "Create request" : "Approve request"}
+                onClick={() => {
+                  if (isBorrowApproved) {
+                    handleCreateRequest();
+                  } else {
+                    approveBorrowRequest();
+                  }
+                }}
               />
             ) : (
               <Flex justify="center">

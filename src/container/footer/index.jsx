@@ -2,7 +2,7 @@ import { Col, Flex, Grid, Row, Typography } from "antd";
 import gsap from "gsap";
 import React from "react";
 import TailSpin from "react-loading-icons/dist/esm/components/tail-spin";
-import Bitcoin from "../../assets/coin_logo/bitcoin-rootstock.png";
+import Bitcoin from "../../assets/coin_logo/Bitcoin.png";
 import Loading from "../../component/loading-wrapper/secondary-loader";
 import logo from "../../assets/coin_logo/brand orange_black bg.png";
 

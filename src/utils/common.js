@@ -27,7 +27,7 @@ export const UNISAT_WALLET_KEY = "unisat";
 export const MAGICEDEN_WALLET_KEY = "magiceden";
 export const META_WALLET_KEY = "meta";
 export const APTOS_BRAND_KEY = "aptos";
-export const IS_USER = true;
+export const IS_USER = false;
 export const IS_DEV = true;
 
 export const ordinals = process.env.REACT_APP_ORDINAL_CANISTER_ID;
