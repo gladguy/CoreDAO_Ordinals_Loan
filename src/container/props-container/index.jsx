@@ -281,7 +281,10 @@ export const propsContainer = (Component) => {
         dispatch(setBorrowCollateral(borrowCollateral));
         dispatch(setUserCollateral(finalData));
       } catch (error) {
-        if (error.message.includes("No NFT found")) {
+        if (
+          error.message.includes("No NFT found") ||
+          error.message.includes("No single NFT has been minted yet")
+        ) {
           const finalData = colResult.map((asset) => {
             let data = { ...asset, collection: {} };
             approvedCollections.forEach((col) => {
@@ -365,7 +368,6 @@ export const propsContainer = (Component) => {
                 : magicEdenAddress
               : WAHEED_ADDRESS
           );
-          console.log("result", result);
           const testData = result?.reduce((acc, curr) => {
             // Find if there is an existing item with the same collectionSymbol
             let existingItem = acc.find(

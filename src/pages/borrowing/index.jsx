@@ -245,6 +245,11 @@ const Borrowing = (props) => {
               const floor = Number(obj.floorPrice)
                 ? Number(obj.floorPrice)
                 : 30000;
+              const floorPrice = (
+                ((floor / BTC_ZERO) * btcvalue) /
+                coreDaoValue
+              ).toFixed(2);
+
               // Assets
               let assets = collateralData?.filter(
                 (p) => p.collectionSymbol === obj.symbol
@@ -254,7 +259,7 @@ const Borrowing = (props) => {
               // Converting ordinal asset price into dollar
               const ordinalPrice = floor / BTC_ZERO;
               // Max amount user can be avail for the ordinal
-              const maxQuoted = Number(ordinalPrice.toFixed(6));
+              const maxQuoted = floorPrice;
               // Cutoff the amount by 2 for initial display
               const amount = maxQuoted / 2;
               // Calc 85% to display close to floor price message
@@ -264,12 +269,10 @@ const Borrowing = (props) => {
               // Calc interest for given no of days
               const interestTerm = Number(interestPerDay) * term;
               // Calc interest for n days
-              const interest = (amount * interestTerm).toFixed(6);
+              const interest = (amount * interestTerm).toFixed(2);
               // Calc 15% of platformfee from interest
               const platformFee = ((interest * 15) / 100).toFixed(6);
-              const sliderLTV = Math.round(
-                ((amount * btcvalue) / (ordinalPrice * btcvalue)) * 100
-              );
+              const sliderLTV = Math.round((amount / floorPrice) * 100);
               toggleBorrowModal();
               setTimeout(() => {
                 amountRef.current.focus();
@@ -287,7 +290,7 @@ const Borrowing = (props) => {
                 APY: obj.APY,
                 interestTerm,
                 interestPerDay,
-                floorPrice: floor,
+                floorPrice,
                 sliderLTV: obj.LTV ? obj.LTV : sliderLTV,
               });
             }}
@@ -302,9 +305,9 @@ const Borrowing = (props) => {
   };
 
   const calcLendData = (amount) => {
-    const interest = (amount * borrowModalData.interestTerm).toFixed(6);
+    const interest = (amount * borrowModalData.interestTerm).toFixed(2);
     // Calc 15% of platform fee.
-    const platformFee = ((interest * 15) / 100).toFixed(6);
+    const platformFee = ((interest * 15) / 100).toFixed(2);
     return {
       interest,
       platformFee,
@@ -381,22 +384,29 @@ const Borrowing = (props) => {
 
       try {
         if (isBorrowApproved) {
-          const amount = borrowModalData.amount * ETH_ZERO;
+          const amount = borrowModalData.amount;
           const platformFee = Number(borrowModalData.platformFee);
           const repaymentAmount =
-            (borrowModalData.amount + Number(borrowModalData.interest)) *
-            ETH_ZERO;
-
+            borrowModalData.amount + Number(borrowModalData.interest);
+          // console.log(
+          //   TokenContractAddress,
+          //   Number(borrowModalData.collectionID),
+          //   borrowModalData.collateral.inscriptionNumber,
+          //   borrowModalData.terms,
+          //   Math.round(amount) * BTC_ZERO,
+          //   Math.round(repaymentAmount * BTC_ZERO),
+          //   Math.round(platformFee * BTC_ZERO)
+          // );
           const requestResult = await borrowContract.createBorrowRequest(
             TokenContractAddress,
             Number(borrowModalData.collectionID),
             borrowModalData.collateral.inscriptionNumber,
             borrowModalData.terms,
-            Math.round(amount),
-            Math.round(repaymentAmount),
-            Math.round(platformFee * ETH_ZERO)
+            Math.round(amount) * BTC_ZERO,
+            Math.round(repaymentAmount * BTC_ZERO),
+            Math.round(platformFee * BTC_ZERO)
           );
-
+          await requestResult.wait();
           if (requestResult.hash) {
             await fetchBorrowRequests();
             await getAllBorrowRequests();
@@ -427,7 +437,7 @@ const Borrowing = (props) => {
     setCollapseActiveKey(["1"]);
   };
 
-  const approveBorrowRequest = async () => {
+  const approveBorrowRequest = async (canIdoApprove) => {
     setIsRequestBtnLoading(true);
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
@@ -443,20 +453,22 @@ const Borrowing = (props) => {
       BorrowContractAddress
     );
 
-    if (isApproved) {
+    if (canIdoApprove && !isApproved) {
+      const result = await tokensContract.setApprovalForAll(
+        BorrowContractAddress,
+        true
+      );
+      await result.wait();
+      isApproved = await tokensContract.isApprovedForAll(
+        metaAddress,
+        BorrowContractAddress
+      );
       setIsBorrowApproved(isApproved);
       setIsRequestBtnLoading(false);
     } else {
-      await tokensContract.setApprovalForAll(BorrowContractAddress, true);
-      setTimeout(async () => {
-        isApproved = await tokensContract.isApprovedForAll(
-          metaAddress,
-          BorrowContractAddress
-        );
-        setIsBorrowApproved(isApproved);
-        setIsRequestBtnLoading(false);
-      }, [3000]);
+      setIsBorrowApproved(isApproved);
     }
+    setIsRequestBtnLoading(false);
   };
 
   useEffect(() => {
@@ -603,7 +615,7 @@ const Borrowing = (props) => {
                   style={{ justifyContent: "center" }}
                   width={15}
                 />{" "}
-                {(borrowModalData.floorPrice / BTC_ZERO).toFixed(4)}
+                {borrowModalData.floorPrice}
               </Text>
             </Flex>
           </Col>
@@ -674,7 +686,8 @@ const Borrowing = (props) => {
           ""
         )} */}
 
-        {borrowModalData.amount > borrowModalData.exceedRange && (
+        {Number(borrowModalData.amount) >
+          Number(borrowModalData.exceedRange) && (
           <Row className="mt-15">
             <Col md={24} className={`modalBoxRedShadow`}>
               <Flex align="center" gap={10}>
@@ -727,9 +740,7 @@ const Borrowing = (props) => {
                   const { interest, platformFee } = calcLendData(inputNumber);
 
                   const LTV = Math.round(
-                    ((inputNumber * btcvalue) /
-                      (borrowModalData.ordinalPrice * btcvalue)) *
-                      100
+                    (inputNumber / borrowModalData.floorPrice) * 100
                   );
 
                   setBorrowModalData((ext) => ({
@@ -753,7 +764,7 @@ const Borrowing = (props) => {
                 size="large"
                 suffix={
                   <Text className={`text-color-one font-xsmall`}>
-                    $ {(borrowModalData.amount * btcvalue).toFixed(2)}
+                    $ {(borrowModalData.amount * coreDaoValue).toFixed(2)}
                   </Text>
                 }
               />
@@ -781,7 +792,7 @@ const Borrowing = (props) => {
                 }
                 suffix={
                   <Text className={`text-color-one font-xsmall`}>
-                    $ {(borrowModalData.interest * btcvalue).toFixed(2)}
+                    $ {(borrowModalData.interest * coreDaoValue).toFixed(2)}
                   </Text>
                 }
               />
@@ -954,7 +965,7 @@ const Borrowing = (props) => {
               onChange={(LTV) => {
                 const amount = (
                   (LTV / 100) *
-                  borrowModalData.ordinalPrice
+                  borrowModalData.floorPrice
                 ).toFixed(6);
 
                 const { interest, platformFee } = calcLendData(amount);
@@ -1181,7 +1192,7 @@ const Borrowing = (props) => {
                   if (isBorrowApproved) {
                     handleCreateRequest();
                   } else {
-                    approveBorrowRequest();
+                    approveBorrowRequest(true);
                   }
                 }}
               />

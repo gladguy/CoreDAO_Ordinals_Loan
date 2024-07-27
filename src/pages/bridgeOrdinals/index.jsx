@@ -110,6 +110,7 @@ const BridgeOrdinals = (props) => {
       );
 
       const mintResult = await contract.mintOrdinal(inscriptionNumber);
+      await mintResult.wait();
       if (mintResult.hash) {
         Notify("success", "Minting success!");
         setInterval(() => {

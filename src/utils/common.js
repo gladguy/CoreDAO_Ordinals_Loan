@@ -27,7 +27,7 @@ export const UNISAT_WALLET_KEY = "unisat";
 export const MAGICEDEN_WALLET_KEY = "magiceden";
 export const META_WALLET_KEY = "meta";
 export const APTOS_BRAND_KEY = "aptos";
-export const IS_USER = false;
+export const IS_USER = true;
 export const IS_DEV = true;
 
 export const ordinals = process.env.REACT_APP_ORDINAL_CANISTER_ID;
@@ -92,8 +92,8 @@ export const calculateFee = (bytes, preference) => {
 }
 
 export const IndexContractAddress = "0xB9B13274557fcbD9A73D16E0F44f14A95467d5A9";
-export const TokenContractAddress = "0xD1Fd42a045416Ff445028282Cf23dBE5a2C79D89";
-export const BorrowContractAddress = "0x8f122a489648f26672586ffd651c4fe655722308";
+export const TokenContractAddress = "0x1a206a4C0E60B8F232Deb1BfCEefC3318A99027d";
+export const BorrowContractAddress = "0x0CB561D4bC0D1E1100f7ee737E15F53B40936E0e";
 
 export const contractGenerator = async (abi, contractAddress) => {
   const web3 = new Web3(window.ethereum);

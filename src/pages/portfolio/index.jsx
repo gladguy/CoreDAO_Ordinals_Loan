@@ -485,7 +485,7 @@ const Portfolio = (props) => {
   // console.log("userBorrowings", userBorrowings);
   // console.log("userLendings", userLendings);
   // console.log("userAssets", userAssets);
-  console.log("supplyModalItems", supplyModalItems);
+  // console.log("supplyModalItems", supplyModalItems);
   return (
     <>
       <Row justify={"space-between"} align={"middle"}>

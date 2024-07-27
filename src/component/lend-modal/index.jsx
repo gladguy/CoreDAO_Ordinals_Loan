@@ -28,8 +28,11 @@ const LendModal = ({
 
   const reduxState = useSelector((state) => state);
   const btcvalue = reduxState.constant.btcvalue;
+  const coreDaoValue = reduxState.constant.coreDaoValue;
+
   const activeWallet = reduxState.wallet.active;
 
+  const BTC_ZERO = process.env.REACT_APP_BTC_ZERO;
   const ETH_ZERO = process.env.REACT_APP_ETH_ZERO;
 
   const [isOfferBtnLoading, setIsOfferBtnLoading] = useState(false);
@@ -87,7 +90,6 @@ const LendModal = ({
       }
     }
   };
-  // console.log("lendModalData", lendModalData);
 
   return (
     <ModalDisplay
@@ -130,7 +132,10 @@ const LendModal = ({
             <Text
               className={`font-size-16 text-color-two letter-spacing-small`}
             >
-              {Number(lendModalData.loanAmount) / ETH_ZERO}
+              {(
+                ((Number(lendModalData.floorPrice) / BTC_ZERO) * btcvalue) /
+                coreDaoValue
+              ).toFixed(2)}
             </Text>
           </Flex>
         </Col>
@@ -230,18 +235,15 @@ const LendModal = ({
                           >
                             ${" "}
                             {(
-                              (Number(lendModalData.loanAmount) / ETH_ZERO) *
-                              btcvalue
+                              (Number(lendModalData.loanAmount) / BTC_ZERO) *
+                              coreDaoValue
                             ).toFixed(2)}
                           </Text>
 
                           <Text
                             className={`font-size-16 text-color-one letter-spacing-small`}
                           >
-                            ~{" "}
-                            {(
-                              Number(lendModalData.loanAmount) / ETH_ZERO
-                            ).toFixed(6)}
+                            ~ {Number(lendModalData.loanAmount) / BTC_ZERO}
                           </Text>
                           <img
                             src={Bitcoin}
@@ -268,9 +270,10 @@ const LendModal = ({
                           >
                             ${" "}
                             {(
-                              (Number(lendModalData.repayAmount) / ETH_ZERO -
-                                Number(lendModalData.loanAmount) / ETH_ZERO) *
-                              btcvalue
+                              ((Number(lendModalData.repayAmount) -
+                                Number(lendModalData.loanAmount)) /
+                                BTC_ZERO) *
+                              coreDaoValue
                             ).toFixed(2)}
                           </Text>
 
@@ -278,10 +281,9 @@ const LendModal = ({
                             className={`font-size-16 text-color-one letter-spacing-small`}
                           >
                             ~{" "}
-                            {(
-                              Number(lendModalData.repayAmount) / ETH_ZERO -
-                              Number(lendModalData.loanAmount) / ETH_ZERO
-                            ).toFixed(6)}
+                            {(Number(lendModalData.repayAmount) -
+                              Number(lendModalData.loanAmount)) /
+                              BTC_ZERO}
                           </Text>
                           <img
                             src={Bitcoin}
@@ -308,15 +310,15 @@ const LendModal = ({
                           >
                             ${" "}
                             {(
-                              (Number(lendModalData.platformFee) / ETH_ZERO) *
-                              btcvalue
+                              (Number(lendModalData.platformFee) / BTC_ZERO) *
+                              coreDaoValue
                             ).toFixed(2)}
                           </Text>
 
                           <Text
                             className={`font-size-16 text-color-one letter-spacing-small`}
                           >
-                            ~ {Number(lendModalData.platformFee) / ETH_ZERO}
+                            ~ {Number(lendModalData.platformFee) / BTC_ZERO}
                           </Text>
                           <img
                             src={Bitcoin}

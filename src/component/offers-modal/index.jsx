@@ -37,7 +37,7 @@ const OffersModal = ({
           className={`text-color-one font-size-16 letter-spacing-small`}
         >
           <img src={Bitcoin} alt="noimage" width="20px" />{" "}
-          {Number(obj.loanAmount) / ETH_ZERO}
+          {Number(obj.loanAmount) / BTC_ZERO}
         </Flex>
       ),
     },
@@ -50,8 +50,8 @@ const OffersModal = ({
         let floor = Number(offerModalData.floorPrice)
           ? Number(offerModalData.floorPrice)
           : 30000;
-        floor = (floor / BTC_ZERO) * btcvalue;
-        const loanAmount = (Number(obj.loanAmount) / ETH_ZERO) * btcvalue;
+        floor = ((floor / BTC_ZERO) * btcvalue) / coreDaoValue;
+        const loanAmount = Number(obj.loanAmount) / BTC_ZERO;
         const LTV = ((loanAmount / floor) * 100).toFixed(2);
         return (
           <Text className={`text-color-one font-size-16 letter-spacing-small`}>
@@ -127,16 +127,15 @@ const OffersModal = ({
                       let floor = Number(offerModalData.floorPrice)
                         ? Number(offerModalData.floorPrice)
                         : 30000;
-                      floor = (floor / BTC_ZERO) * btcvalue;
-                      const loanAmount =
-                        (Number(obj.loanAmount) / ETH_ZERO) * btcvalue;
+                      floor = ((floor / BTC_ZERO) * btcvalue) / coreDaoValue;
+                      const loanAmount = Number(obj.loanAmount) / BTC_ZERO;
                       const LTV = ((loanAmount / floor) * 100).toFixed(2);
                       return (
                         <CustomButton
                           className={
                             "click-btn font-weight-600 letter-spacing-small"
                           }
-                          disabled={obj.borrower === metaAddress}
+                          // disabled={obj.borrower === metaAddress}
                           title={
                             <Flex align="center" justify="center" gap={10}>
                               <span
