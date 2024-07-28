@@ -53,6 +53,7 @@ const Portfolio = (props) => {
   //   : magicEdenAddress;
   const CONTENT_API = process.env.REACT_APP_ORDINALS_CONTENT_API;
   const BTC_ZERO = process.env.REACT_APP_BTC_ZERO;
+  const ETH_ZERO = process.env.REACT_APP_ETH_ZERO;
 
   const { Text } = Typography;
   const [copy, setCopy] = useState("Copy");
@@ -162,8 +163,8 @@ const Portfolio = (props) => {
         <>
           <Flex gap={5} vertical align="center">
             {obj.contentType === "image/webp" ||
-            obj.contentType === "image/jpeg" ||
-            obj.contentType === "image/png" ? (
+              obj.contentType === "image/jpeg" ||
+              obj.contentType === "image/png" ? (
               <img
                 src={`${CONTENT_API}/content/${obj.id}`}
                 alt={`${obj.id}-borrow_image`}
@@ -190,11 +191,10 @@ const Portfolio = (props) => {
               </iframe>
             ) : (
               <img
-                src={`${
-                  obj?.meta?.collection_page_img_url
+                src={`${obj?.meta?.collection_page_img_url
                     ? obj?.meta?.collection_page_img_url
                     : `${process.env.PUBLIC_URL}/collections/${obj?.collectionSymbol}`
-                }`}
+                  }`}
                 onError={(e) =>
                   (e.target.src = `${process.env.PUBLIC_URL}/collections/${obj?.collectionSymbol}.png`)
                 }
@@ -452,11 +452,24 @@ const Portfolio = (props) => {
         tokenId
       );
 
+      console.log(request.repayAmount);
+
+      // Convert the hex value to BigNumber
+      const bigNumberValue = ethers.BigNumber.from(request.repayAmount);
+
+      // Convert to decimal string
+      const loanAmount_ = bigNumberValue.toString();
+      console.log('Hex Value:', request.repayAmount);
+      console.log('Decimal Value:', loanAmount_);
+
+      let _loanAmount = (loanAmount_/ (ETH_ZERO))
+      const Wei_loanAmount = ethers.utils.parseUnits(_loanAmount.toString(), 'ether'); // 1 Core, with 18 decimals
+
       const requestResult = await borrowContract.loanRepayment(
         nftContract,
         tokenId,
         {
-          value: request.repayAmount,
+          value: Wei_loanAmount,
         }
       );
 
@@ -811,8 +824,8 @@ const Portfolio = (props) => {
                   <>
                     <Flex gap={5} vertical align="center">
                       {supplyModalItems.contentType === "image/webp" ||
-                      supplyModalItems.contentType === "image/jpeg" ||
-                      supplyModalItems.contentType === "image/png" ? (
+                        supplyModalItems.contentType === "image/jpeg" ||
+                        supplyModalItems.contentType === "image/png" ? (
                         <img
                           src={`${CONTENT_API}/content/${supplyModalItems.id}`}
                           alt={`${supplyModalItems.id}-borrow_image`}
@@ -822,7 +835,7 @@ const Portfolio = (props) => {
                         />
                       ) : supplyModalItems.contentType === "image/svg" ||
                         supplyModalItems.contentType ===
-                          "text/html;charset=utf-8" ||
+                        "text/html;charset=utf-8" ||
                         supplyModalItems.contentType === "text/html" ||
                         supplyModalItems.contentType === "image/svg+xml" ? (
                         <iframe
@@ -845,11 +858,10 @@ const Portfolio = (props) => {
                         </iframe>
                       ) : (
                         <img
-                          src={`${
-                            supplyModalItems?.meta?.collection_page_img_url
+                          src={`${supplyModalItems?.meta?.collection_page_img_url
                               ? supplyModalItems?.meta?.collection_page_img_url
                               : `${process.env.PUBLIC_URL}/collections/${supplyModalItems?.collectionSymbol}`
-                          }`}
+                            }`}
                           // NatBoys
                           // src={`https://ipfs.io/ipfs/QmdQboXbkTdwEa2xPkzLsCmXmgzzQg3WCxWFEnSvbnqKJr/1842.png`}
                           // src={`${process.env.PUBLIC_URL}/collections/${supplyModalItems?.collectionSymbol}.png`}

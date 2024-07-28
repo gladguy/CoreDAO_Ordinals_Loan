@@ -33,7 +33,7 @@ const Lending = (props) => {
   const [collapseActiveKey, setCollapseActiveKey] = useState(["2"]);
 
   const BTC_ZERO = process.env.REACT_APP_BTC_ZERO;
-
+  
   const approvedCollectionColumns = [
     {
       key: "Collections",

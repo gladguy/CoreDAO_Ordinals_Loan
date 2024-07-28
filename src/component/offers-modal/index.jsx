@@ -24,6 +24,8 @@ const OffersModal = ({
   const BTC_ZERO = process.env.REACT_APP_BTC_ZERO;
   const ETH_ZERO = process.env.REACT_APP_ETH_ZERO;
 
+
+
   const activeOffersColumns = [
     {
       key: "Principal",
@@ -37,11 +39,14 @@ const OffersModal = ({
           className={`text-color-one font-size-16 letter-spacing-small`}
         >
           <img src={Bitcoin} alt="noimage" width="20px" />{" "}
-          {Number(obj.loanAmount) / BTC_ZERO}
+          {Number(obj.loanAmount) / ETH_ZERO}
         </Flex>
       ),
     },
     {
+
+
+
       key: "LTV",
       title: "LTV",
       align: "center",
@@ -50,12 +55,14 @@ const OffersModal = ({
         let floor = Number(offerModalData.floorPrice)
           ? Number(offerModalData.floorPrice)
           : 30000;
+      
         floor = ((floor / BTC_ZERO) * btcvalue) / coreDaoValue;
-        const loanAmount = Number(obj.loanAmount) / BTC_ZERO;
+        const loanAmount = (Number(obj.loanAmount) / ETH_ZERO) ;
         const LTV = ((loanAmount / floor) * 100).toFixed(2);
+
         return (
           <Text className={`text-color-one font-size-16 letter-spacing-small`}>
-            {Math.round(LTV)}%
+            {Number(LTV).toFixed(2)}%
           </Text>
         );
       },
@@ -127,8 +134,8 @@ const OffersModal = ({
                       let floor = Number(offerModalData.floorPrice)
                         ? Number(offerModalData.floorPrice)
                         : 30000;
-                      floor = ((floor / BTC_ZERO) * btcvalue) / coreDaoValue;
-                      const loanAmount = Number(obj.loanAmount) / BTC_ZERO;
+                      floor = ((floor / ETH_ZERO) * btcvalue) / coreDaoValue;
+                      const loanAmount = Number(obj.loanAmount) / ETH_ZERO;
                       const LTV = ((loanAmount / floor) * 100).toFixed(2);
                       return (
                         <CustomButton

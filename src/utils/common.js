@@ -92,8 +92,8 @@ export const calculateFee = (bytes, preference) => {
 }
 
 export const IndexContractAddress = "0xB9B13274557fcbD9A73D16E0F44f14A95467d5A9";
-export const TokenContractAddress = "0x1a206a4C0E60B8F232Deb1BfCEefC3318A99027d";
-export const BorrowContractAddress = "0x0CB561D4bC0D1E1100f7ee737E15F53B40936E0e";
+export const TokenContractAddress = "0x606e43F25081F7Ac41e7F3D6Dd4E3B716d757A64";
+export const BorrowContractAddress = "0x4a3d69545Bfc270CC172C04864E719c07417560e";
 
 export const contractGenerator = async (abi, contractAddress) => {
   const web3 = new Web3(window.ethereum);

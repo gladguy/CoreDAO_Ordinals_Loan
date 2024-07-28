@@ -66,8 +66,10 @@ const LendModal = ({
 
       const requestId = Number(lendModalData.requestId);
       const loanAmount = Number(lendModalData.loanAmount);
+
+      console.log("Loan Amount = " + loanAmount);
       const acceptLoan = await borrowContract.acceptBorrowRequest(requestId, {
-        value: loanAmount,
+        value: loanAmount.toString(),
       });
 
       await acceptLoan.wait();
@@ -133,7 +135,7 @@ const LendModal = ({
               className={`font-size-16 text-color-two letter-spacing-small`}
             >
               {(
-                ((Number(lendModalData.floorPrice) / BTC_ZERO) * btcvalue) /
+                ((Number(lendModalData.floorPrice) / ETH_ZERO) * btcvalue) /
                 coreDaoValue
               ).toFixed(2)}
             </Text>
@@ -235,7 +237,7 @@ const LendModal = ({
                           >
                             ${" "}
                             {(
-                              (Number(lendModalData.loanAmount) / BTC_ZERO) *
+                              (Number(lendModalData.loanAmount) / ETH_ZERO) *
                               coreDaoValue
                             ).toFixed(2)}
                           </Text>
@@ -243,7 +245,7 @@ const LendModal = ({
                           <Text
                             className={`font-size-16 text-color-one letter-spacing-small`}
                           >
-                            ~ {Number(lendModalData.loanAmount) / BTC_ZERO}
+                            ~ {Number(lendModalData.loanAmount) / ETH_ZERO}
                           </Text>
                           <img
                             src={Bitcoin}
@@ -272,7 +274,7 @@ const LendModal = ({
                             {(
                               ((Number(lendModalData.repayAmount) -
                                 Number(lendModalData.loanAmount)) /
-                                BTC_ZERO) *
+                                ETH_ZERO) *
                               coreDaoValue
                             ).toFixed(2)}
                           </Text>
@@ -283,7 +285,7 @@ const LendModal = ({
                             ~{" "}
                             {(Number(lendModalData.repayAmount) -
                               Number(lendModalData.loanAmount)) /
-                              BTC_ZERO}
+                              ETH_ZERO}
                           </Text>
                           <img
                             src={Bitcoin}
@@ -310,7 +312,7 @@ const LendModal = ({
                           >
                             ${" "}
                             {(
-                              (Number(lendModalData.platformFee) / BTC_ZERO) *
+                              (Number(lendModalData.platformFee) / ETH_ZERO) *
                               coreDaoValue
                             ).toFixed(2)}
                           </Text>
@@ -318,7 +320,7 @@ const LendModal = ({
                           <Text
                             className={`font-size-16 text-color-one letter-spacing-small`}
                           >
-                            ~ {Number(lendModalData.platformFee) / BTC_ZERO}
+                            ~ {Number(lendModalData.platformFee) / ETH_ZERO}
                           </Text>
                           <img
                             src={Bitcoin}

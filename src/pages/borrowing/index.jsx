@@ -397,6 +397,29 @@ const Borrowing = (props) => {
           //   Math.round(repaymentAmount * BTC_ZERO),
           //   Math.round(platformFee * BTC_ZERO)
           // );
+
+          console.log("Loan Amount = " + amount);
+          console.log("Repayment Amount = "+ repaymentAmount);
+          console.log("Platform Fee Amount = "+ platformFee);
+
+          const Wei_loanAmount = ethers.utils.parseUnits(amount.toString(), 'ether'); // 1 Core, with 18 decimals
+          const Wei_repayAmount = ethers.utils.parseUnits(repaymentAmount.toString(), 'ether'); // 1.05 Core, with 18 decimals
+          const Wei_platformFee = ethers.utils.parseUnits(platformFee.toString(), 'ether'); // 0.01 Core, with 18 decimals
+
+          console.log("Loan Amount = " + Wei_loanAmount);
+          console.log("Repayment Amount = "+ Wei_repayAmount);
+          console.log("Platform Fee Amount = "+ Wei_platformFee);
+
+          const requestResult = await borrowContract.createBorrowRequest(
+            TokenContractAddress,
+            Number(borrowModalData.collectionID),
+            borrowModalData.collateral.inscriptionNumber,
+            borrowModalData.terms,
+            Wei_loanAmount,
+            Wei_repayAmount,
+            Wei_platformFee
+          );
+          /*
           const requestResult = await borrowContract.createBorrowRequest(
             TokenContractAddress,
             Number(borrowModalData.collectionID),
@@ -406,6 +429,9 @@ const Borrowing = (props) => {
             Math.round(repaymentAmount * BTC_ZERO),
             Math.round(platformFee * BTC_ZERO)
           );
+          */
+
+
           await requestResult.wait();
           if (requestResult.hash) {
             await fetchBorrowRequests();
@@ -1064,7 +1090,7 @@ const Borrowing = (props) => {
                             <Text
                               className={`card-box border text-color-two padding-small-box padding-small-box font-xsmall`}
                             >
-                              $ {(borrowModalData.amount * btcvalue).toFixed(2)}
+                              $ {(borrowModalData.amount * coreDaoValue).toFixed(2)}
                             </Text>
 
                             <Text
@@ -1097,7 +1123,7 @@ const Borrowing = (props) => {
                               className={`card-box border text-color-two padding-small-box font-xsmall`}
                             >
                               ${" "}
-                              {(borrowModalData.interest * btcvalue).toFixed(2)}
+                              {(borrowModalData.interest * coreDaoValue).toFixed(2)}
                             </Text>
 
                             <Text
@@ -1130,7 +1156,7 @@ const Borrowing = (props) => {
                               className={`card-box border text-color-two padding-small-box font-xsmall`}
                             >
                               ${" "}
-                              {(borrowModalData.platformFee * btcvalue).toFixed(
+                              {(borrowModalData.platformFee * coreDaoValue).toFixed(
                                 2
                               )}
                             </Text>
