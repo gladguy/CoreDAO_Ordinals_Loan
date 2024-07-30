@@ -1664,6 +1664,13 @@ input::-webkit-input-placeholder {
   color: white;
 }
 
+.ant-tabs-top>.ant-tabs-nav::before,
+.ant-tabs-bottom>.ant-tabs-nav::before,
+.ant-tabs-top>div>.ant-tabs-nav::before,
+.ant-tabs-bottom>div>.ant-tabs-nav::before {
+  border-bottom: none;
+}
+
 .ant-tabs .ant-tabs-tab:active {
   color: white;
 }
@@ -1753,7 +1760,7 @@ input::-webkit-input-placeholder {
 
 .ant-tabs .ant-tabs-ink-bar {
   position: absolute;
-  background: violet !important;
+  background: #bb3f54 !important;
   pointer-events: none;
 }
 

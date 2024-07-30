@@ -17,14 +17,11 @@ const OffersModal = ({
   const { Text } = Typography;
   const state = useSelector((state) => state);
   const offers = state.constant.offers;
-  const metaAddress = state.wallet.meta.address;
   const btcvalue = state.constant.btcvalue;
   const coreDaoValue = state.constant.coreDaoValue;
 
   const BTC_ZERO = process.env.REACT_APP_BTC_ZERO;
   const ETH_ZERO = process.env.REACT_APP_ETH_ZERO;
-
-
 
   const activeOffersColumns = [
     {
@@ -44,9 +41,6 @@ const OffersModal = ({
       ),
     },
     {
-
-
-
       key: "LTV",
       title: "LTV",
       align: "center",
@@ -55,9 +49,9 @@ const OffersModal = ({
         let floor = Number(offerModalData.floorPrice)
           ? Number(offerModalData.floorPrice)
           : 30000;
-      
+
         floor = ((floor / BTC_ZERO) * btcvalue) / coreDaoValue;
-        const loanAmount = (Number(obj.loanAmount) / ETH_ZERO) ;
+        const loanAmount = Number(obj.loanAmount) / ETH_ZERO;
         const LTV = ((loanAmount / floor) * 100).toFixed(2);
 
         return (

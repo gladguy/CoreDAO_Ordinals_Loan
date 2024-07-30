@@ -71,7 +71,6 @@ const Borrowing = (props) => {
   const [isRequestBtnLoading, setIsRequestBtnLoading] = useState(false);
   const [isBorrowApproved, setIsBorrowApproved] = useState(null);
   const BTC_ZERO = process.env.REACT_APP_BTC_ZERO;
-  const ETH_ZERO = process.env.REACT_APP_ETH_ZERO;
 
   const approvedCollectionColumns = [
     {
@@ -399,16 +398,25 @@ const Borrowing = (props) => {
           // );
 
           console.log("Loan Amount = " + amount);
-          console.log("Repayment Amount = "+ repaymentAmount);
-          console.log("Platform Fee Amount = "+ platformFee);
+          console.log("Repayment Amount = " + repaymentAmount);
+          console.log("Platform Fee Amount = " + platformFee);
 
-          const Wei_loanAmount = ethers.utils.parseUnits(amount.toString(), 'ether'); // 1 Core, with 18 decimals
-          const Wei_repayAmount = ethers.utils.parseUnits(repaymentAmount.toString(), 'ether'); // 1.05 Core, with 18 decimals
-          const Wei_platformFee = ethers.utils.parseUnits(platformFee.toString(), 'ether'); // 0.01 Core, with 18 decimals
+          const Wei_loanAmount = ethers.utils.parseUnits(
+            amount.toString(),
+            "ether"
+          ); // 1 Core, with 18 decimals
+          const Wei_repayAmount = ethers.utils.parseUnits(
+            repaymentAmount.toString(),
+            "ether"
+          ); // 1.05 Core, with 18 decimals
+          const Wei_platformFee = ethers.utils.parseUnits(
+            platformFee.toString(),
+            "ether"
+          ); // 0.01 Core, with 18 decimals
 
           console.log("Loan Amount = " + Wei_loanAmount);
-          console.log("Repayment Amount = "+ Wei_repayAmount);
-          console.log("Platform Fee Amount = "+ Wei_platformFee);
+          console.log("Repayment Amount = " + Wei_repayAmount);
+          console.log("Platform Fee Amount = " + Wei_platformFee);
 
           const requestResult = await borrowContract.createBorrowRequest(
             TokenContractAddress,
@@ -430,7 +438,6 @@ const Borrowing = (props) => {
             Math.round(platformFee * BTC_ZERO)
           );
           */
-
 
           await requestResult.wait();
           if (requestResult.hash) {
@@ -464,37 +471,42 @@ const Borrowing = (props) => {
   };
 
   const approveBorrowRequest = async (canIdoApprove) => {
-    setIsRequestBtnLoading(true);
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
+    try {
+      setIsRequestBtnLoading(true);
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
 
-    const tokensContract = new ethers.Contract(
-      TokenContractAddress,
-      tokensJson,
-      signer
-    );
-
-    let isApproved = await tokensContract.isApprovedForAll(
-      metaAddress,
-      BorrowContractAddress
-    );
-
-    if (canIdoApprove && !isApproved) {
-      const result = await tokensContract.setApprovalForAll(
-        BorrowContractAddress,
-        true
+      const tokensContract = new ethers.Contract(
+        TokenContractAddress,
+        tokensJson,
+        signer
       );
-      await result.wait();
-      isApproved = await tokensContract.isApprovedForAll(
+
+      let isApproved = await tokensContract.isApprovedForAll(
         metaAddress,
         BorrowContractAddress
       );
-      setIsBorrowApproved(isApproved);
+
+      if (canIdoApprove && !isApproved) {
+        const result = await tokensContract.setApprovalForAll(
+          BorrowContractAddress,
+          true
+        );
+        await result.wait();
+        isApproved = await tokensContract.isApprovedForAll(
+          metaAddress,
+          BorrowContractAddress
+        );
+        setIsBorrowApproved(isApproved);
+        setIsRequestBtnLoading(false);
+      } else {
+        setIsBorrowApproved(isApproved);
+      }
       setIsRequestBtnLoading(false);
-    } else {
-      setIsBorrowApproved(isApproved);
+    } catch (error) {
+      console.log("Approve borrow req error", error);
+      setIsRequestBtnLoading(false);
     }
-    setIsRequestBtnLoading(false);
   };
 
   useEffect(() => {
@@ -1090,7 +1102,10 @@ const Borrowing = (props) => {
                             <Text
                               className={`card-box border text-color-two padding-small-box padding-small-box font-xsmall`}
                             >
-                              $ {(borrowModalData.amount * coreDaoValue).toFixed(2)}
+                              ${" "}
+                              {(borrowModalData.amount * coreDaoValue).toFixed(
+                                2
+                              )}
                             </Text>
 
                             <Text
@@ -1123,7 +1138,9 @@ const Borrowing = (props) => {
                               className={`card-box border text-color-two padding-small-box font-xsmall`}
                             >
                               ${" "}
-                              {(borrowModalData.interest * coreDaoValue).toFixed(2)}
+                              {(
+                                borrowModalData.interest * coreDaoValue
+                              ).toFixed(2)}
                             </Text>
 
                             <Text
@@ -1156,9 +1173,9 @@ const Borrowing = (props) => {
                               className={`card-box border text-color-two padding-small-box font-xsmall`}
                             >
                               ${" "}
-                              {(borrowModalData.platformFee * coreDaoValue).toFixed(
-                                2
-                              )}
+                              {(
+                                borrowModalData.platformFee * coreDaoValue
+                              ).toFixed(2)}
                             </Text>
 
                             <Text

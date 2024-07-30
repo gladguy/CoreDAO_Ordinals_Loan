@@ -32,7 +32,6 @@ const LendModal = ({
 
   const activeWallet = reduxState.wallet.active;
 
-  const BTC_ZERO = process.env.REACT_APP_BTC_ZERO;
   const ETH_ZERO = process.env.REACT_APP_ETH_ZERO;
 
   const [isOfferBtnLoading, setIsOfferBtnLoading] = useState(false);
