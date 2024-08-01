@@ -19,7 +19,6 @@ export const apiUrl = {
   Coin_base_url: process.env.REACT_APP_COINBASE_API,
   Asset_server_base_url: process.env.REACT_APP_ASSET_SERVER,
   Unisat_open_api: process.env.REACT_APP_UNISAT_OPEN_API,
-  Ordiscan_api: process.env.REACT_APP_ORDISCAN_API
 };
 
 export const XVERSE_WALLET_KEY = "xverse";
@@ -34,6 +33,7 @@ export const ordinals = process.env.REACT_APP_ORDINAL_CANISTER_ID;
 export const rootstock = process.env.REACT_APP_ROOTSTOCK_CANISTER_ID;
 export const ordiscan_bearer = process.env.REACT_APP_ORDISCAN_BEARER;
 export const foundaryId = Number(process.env.REACT_APP_FOUNDARY_ID);
+const BTC_ZERO = process.env.REACT_APP_BTC_ZERO;
 
 export const BTCWallets = [
   {
@@ -89,6 +89,51 @@ export const calculateFee = (bytes, preference) => {
     preference *
     3.47
   )
+}
+
+function fractionToFixed(numerator, denominator, minDecimalPlaces = 2, maxDecimalPlaces = 20) {
+  // Convert fraction to decimal
+  const decimalValue = numerator / denominator;
+
+  // If the decimalValue is 0, return 0 with minDecimalPlaces
+  if (decimalValue === 0) {
+    return decimalValue.toFixed(minDecimalPlaces);
+  }
+
+  // Calculate the number of significant decimal places needed
+  let significantDecimalPlaces = 0;
+  for (let i = 2; i <= maxDecimalPlaces; i++) {
+    const fixedValue = decimalValue.toFixed(i);
+    if (parseFloat(fixedValue) !== 0) {
+      significantDecimalPlaces = i;
+      break;
+    }
+  }
+
+  // Ensure at least minDecimalPlaces
+  significantDecimalPlaces = Math.max(minDecimalPlaces, significantDecimalPlaces);
+
+  // Use toFixed to format the decimal value to the determined number of decimal places
+  const formattedValue = decimalValue.toFixed(significantDecimalPlaces);
+
+  return formattedValue;
+}
+
+
+export const calculateOrdinalInCoreDao = (ordinalFloor, BTCPriceInUSD, BNBPriceInUSD) => {
+  // Calculate Floor to USD
+  const floorInUSD = ordinalFloor / BTC_ZERO;
+
+  // Calculate ordinal price in USD
+  const ordinalInUSD = floorInUSD * BTCPriceInUSD;
+
+  // Calculate ordinal price in BNB
+  const ordinalInBNB = fractionToFixed(ordinalInUSD, BNBPriceInUSD);
+
+  return {
+    ordinalInUSD: ordinalInUSD.toFixed(2),
+    ordinalInBNB: ordinalInBNB
+  };
 }
 
 export const IndexContractAddress = "0xB9B13274557fcbD9A73D16E0F44f14A95467d5A9";

@@ -49,7 +49,7 @@ const Footer = (props) => {
                   height={breakpoints.xs ? "25px" : ""}
                 />
                 <Text
-                  className={`gradient-text-one ${
+                  className={`text-color-one ${
                     breakpoints.xs ? "font-xmsmall" : "font-small"
                   } heading-one`}
                 >
@@ -80,7 +80,7 @@ const Footer = (props) => {
                   height={breakpoints.xs ? "25px" : ""}
                 />
                 <Text
-                  className={`gradient-text-one ${
+                  className={`text-color-one ${
                     breakpoints.xs ? "font-xmsmall" : "font-small"
                   } heading-one`}
                 >

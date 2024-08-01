@@ -12,6 +12,7 @@ import OffersModal from "../../component/offers-modal";
 import TableComponent from "../../component/table";
 import { propsContainer } from "../../container/props-container";
 import { setOffers } from "../../redux/slice/constant";
+import { calculateOrdinalInCoreDao } from "../../utils/common";
 
 const Lending = (props) => {
   const { reduxState, dispatch } = props.redux;
@@ -33,7 +34,7 @@ const Lending = (props) => {
   const [collapseActiveKey, setCollapseActiveKey] = useState(["2"]);
 
   const BTC_ZERO = process.env.REACT_APP_BTC_ZERO;
-  
+
   const approvedCollectionColumns = [
     {
       key: "Collections",
@@ -159,15 +160,19 @@ const Lending = (props) => {
       align: "center",
       dataIndex: "floor",
       render: (_, obj) => {
-        const floor = Number(obj.floorPrice) ? Number(obj.floorPrice) : 30000;
+        const data = calculateOrdinalInCoreDao(
+          Number(obj.floorPrice),
+          btcvalue,
+          coreDaoValue
+        );
         return (
           <Flex align="center" vertical gap={5}>
             <Flex align="center" vertical gap={5} className={"text-color-one"}>
               <Flex align="center" gap={3}>
-                <img src={Bitcoin} alt="noimage" width="20px" />{" "}
-                {(((floor / BTC_ZERO) * btcvalue) / coreDaoValue).toFixed(2)}{" "}
+                <img src={Bitcoin} alt="noimage" width={20} />{" "}
+                {data.ordinalInBNB}
               </Flex>
-              <div>${((floor / BTC_ZERO) * btcvalue).toFixed(2)} </div>
+              ${data.ordinalInUSD}
             </Flex>
           </Flex>
         );
@@ -186,15 +191,6 @@ const Lending = (props) => {
             size="medium"
             onClick={() => {
               fetchRequests(obj);
-
-              // toggleLendModal();
-              // setLendModalData({
-              //   collateral: "",
-              //   symbol: obj.symbol,
-              //   canisterId: obj.canister,
-              //   collectionName: obj.name,
-              //   thumbnailURI: obj.thumbnailURI,
-              // });
             }}
           />
         );
@@ -205,10 +201,6 @@ const Lending = (props) => {
   const fetchRequests = async (obj) => {
     try {
       if (allBorrowRequest !== null) {
-        // const API = agentCreator(rootstockApiFactory, rootstock);
-        // const borrowreq = await API.getBorrowRequestsByCollectionId(obj.collectionID);
-        // dispatch(setOffers(borrowreq));
-
         const collectionBorrowRequests = allBorrowRequest.filter(
           (req) => Number(req.collectionId) === Number(obj.collectionID)
         );

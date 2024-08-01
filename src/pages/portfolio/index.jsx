@@ -40,7 +40,7 @@ const Portfolio = (props) => {
   const walletState = reduxState.wallet;
   const dashboardData = reduxState.constant.dashboardData;
   // const xverseAddress = walletState.xverse.ordinals.address;
-  const userAssets = reduxState.constant.userAssets;
+  const userAssets = reduxState.constant.userAssets || [];
   // const unisatAddress = walletState.unisat.address;
   // const magicEdenAddress = walletState.magicEden.ordinals.address;
   const btcValue = reduxState.constant.btcvalue;
@@ -68,9 +68,6 @@ const Portfolio = (props) => {
 
   const [radioBtn, setRadioBtn] = useState("Assets");
   const [enableTour, setEnableTour] = useState(false);
-
-  const TOUR_SVG = process.env.REACT_APP_TOUR_SVG;
-  const TOUR_ID = process.env.REACT_APP_TOUR_ID;
 
   const portfolioCards = [
     {
@@ -163,8 +160,8 @@ const Portfolio = (props) => {
         <>
           <Flex gap={5} vertical align="center">
             {obj.contentType === "image/webp" ||
-              obj.contentType === "image/jpeg" ||
-              obj.contentType === "image/png" ? (
+            obj.contentType === "image/jpeg" ||
+            obj.contentType === "image/png" ? (
               <img
                 src={`${CONTENT_API}/content/${obj.id}`}
                 alt={`${obj.id}-borrow_image`}
@@ -191,10 +188,11 @@ const Portfolio = (props) => {
               </iframe>
             ) : (
               <img
-                src={`${obj?.meta?.collection_page_img_url
+                src={`${
+                  obj?.meta?.collection_page_img_url
                     ? obj?.meta?.collection_page_img_url
                     : `${process.env.PUBLIC_URL}/collections/${obj?.collectionSymbol}`
-                  }`}
+                }`}
                 onError={(e) =>
                   (e.target.src = `${process.env.PUBLIC_URL}/collections/${obj?.collectionSymbol}.png`)
                 }
@@ -350,7 +348,7 @@ const Portfolio = (props) => {
         <Flex align="center" justify="center" gap={3}>
           <img src={Bitcoin} alt="noimage" width={20} />{" "}
           <Text className="text-color-one">
-            {Number(obj.loanAmount) / BTC_ZERO}
+            {Number(obj.loanAmount) / ETH_ZERO}
           </Text>
         </Flex>
       ),
@@ -364,7 +362,7 @@ const Portfolio = (props) => {
         <Flex align="center" justify="center" gap={3}>
           <img src={Bitcoin} alt="noimage" width={20} />{" "}
           <Text className="text-color-one">
-            {Number(obj.platformFee) / BTC_ZERO}
+            {Number(obj.platformFee) / ETH_ZERO}
           </Text>
         </Flex>
       ),
@@ -378,7 +376,7 @@ const Portfolio = (props) => {
         <Flex align="center" justify="center" gap={3}>
           <img src={Bitcoin} alt="noimage" width={20} />{" "}
           <Text className="text-color-one">
-            {(Number(obj.repayAmount) / BTC_ZERO).toFixed(2)}
+            {(Number(obj.repayAmount) / ETH_ZERO).toFixed(2)}
           </Text>
         </Flex>
       ),
@@ -452,18 +450,17 @@ const Portfolio = (props) => {
         tokenId
       );
 
-      console.log(request.repayAmount);
-
       // Convert the hex value to BigNumber
       const bigNumberValue = ethers.BigNumber.from(request.repayAmount);
 
       // Convert to decimal string
       const loanAmount_ = bigNumberValue.toString();
-      console.log('Hex Value:', request.repayAmount);
-      console.log('Decimal Value:', loanAmount_);
 
-      let _loanAmount = (loanAmount_/ (ETH_ZERO))
-      const Wei_loanAmount = ethers.utils.parseUnits(_loanAmount.toString(), 'ether'); // 1 Core, with 18 decimals
+      let _loanAmount = loanAmount_ / ETH_ZERO;
+      const Wei_loanAmount = ethers.utils.parseUnits(
+        _loanAmount.toString(),
+        "ether"
+      ); // 1 Core, with 18 decimals
 
       const requestResult = await borrowContract.loanRepayment(
         nftContract,
@@ -494,11 +491,7 @@ const Portfolio = (props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeWallet]);
-  // console.log("userRequests", userRequests);
-  // console.log("userBorrowings", userBorrowings);
-  // console.log("userLendings", userLendings);
-  // console.log("userAssets", userAssets);
-  // console.log("supplyModalItems", supplyModalItems);
+
   return (
     <>
       <Row justify={"space-between"} align={"middle"}>
@@ -517,32 +510,17 @@ const Portfolio = (props) => {
               <MdTour
                 style={{ cursor: "pointer" }}
                 onClick={() => setEnableTour(true)}
-                color="violet"
+                className="text-color-two"
                 size={32}
               />
             </Col>
             {activeWallet.length ? (
               <Col>
-                <button
-                  type="button"
+                <CustomButton
                   onClick={() => setDownloadWalletModal(true)}
-                  className="dwnld-button"
-                >
-                  <span className="button__text">Download Wallets</span>
-                  <span className="button__icon">
-                    <svg
-                      className="svg"
-                      data-name="Layer 2"
-                      id={TOUR_ID}
-                      viewBox="0 0 35 35"
-                      xmlns={TOUR_SVG}
-                    >
-                      <path d="M17.5,22.131a1.249,1.249,0,0,1-1.25-1.25V2.187a1.25,1.25,0,0,1,2.5,0V20.881A1.25,1.25,0,0,1,17.5,22.131Z"></path>
-                      <path d="M17.5,22.693a3.189,3.189,0,0,1-2.262-.936L8.487,15.006a1.249,1.249,0,0,1,1.767-1.767l6.751,6.751a.7.7,0,0,0,.99,0l6.751-6.751a1.25,1.25,0,0,1,1.768,1.767l-6.752,6.751A3.191,3.191,0,0,1,17.5,22.693Z"></path>
-                      <path d="M31.436,34.063H3.564A3.318,3.318,0,0,1,.25,30.749V22.011a1.25,1.25,0,0,1,2.5,0v8.738a.815.815,0,0,0,.814.814H31.436a.815.815,0,0,0,.814-.814V22.011a1.25,1.25,0,1,1,2.5,0v8.738A3.318,3.318,0,0,1,31.436,34.063Z"></path>
-                    </svg>
-                  </span>
-                </button>
+                  className={"click-btn font-weight-600 letter-spacing-small"}
+                  title="Download wallets"
+                />
               </Col>
             ) : (
               ""
@@ -650,7 +628,9 @@ const Portfolio = (props) => {
                       }}
                       pagination={{ pageSize: 5 }}
                       rowKey={(e) =>
-                        `${e?.id}-${e?.inscriptionNumber}-${Math.random()}`
+                        `${e?.id}-${
+                          e?.inscriptionNumber
+                        }-${Math.random()}-${Date.now()}`
                       }
                       tableColumns={AssetsToSupplyTableColumns}
                       tableData={userAssets}
@@ -824,8 +804,8 @@ const Portfolio = (props) => {
                   <>
                     <Flex gap={5} vertical align="center">
                       {supplyModalItems.contentType === "image/webp" ||
-                        supplyModalItems.contentType === "image/jpeg" ||
-                        supplyModalItems.contentType === "image/png" ? (
+                      supplyModalItems.contentType === "image/jpeg" ||
+                      supplyModalItems.contentType === "image/png" ? (
                         <img
                           src={`${CONTENT_API}/content/${supplyModalItems.id}`}
                           alt={`${supplyModalItems.id}-borrow_image`}
@@ -835,7 +815,7 @@ const Portfolio = (props) => {
                         />
                       ) : supplyModalItems.contentType === "image/svg" ||
                         supplyModalItems.contentType ===
-                        "text/html;charset=utf-8" ||
+                          "text/html;charset=utf-8" ||
                         supplyModalItems.contentType === "text/html" ||
                         supplyModalItems.contentType === "image/svg+xml" ? (
                         <iframe
@@ -858,10 +838,11 @@ const Portfolio = (props) => {
                         </iframe>
                       ) : (
                         <img
-                          src={`${supplyModalItems?.meta?.collection_page_img_url
+                          src={`${
+                            supplyModalItems?.meta?.collection_page_img_url
                               ? supplyModalItems?.meta?.collection_page_img_url
                               : `${process.env.PUBLIC_URL}/collections/${supplyModalItems?.collectionSymbol}`
-                            }`}
+                          }`}
                           // NatBoys
                           // src={`https://ipfs.io/ipfs/QmdQboXbkTdwEa2xPkzLsCmXmgzzQg3WCxWFEnSvbnqKJr/1842.png`}
                           // src={`${process.env.PUBLIC_URL}/collections/${supplyModalItems?.collectionSymbol}.png`}

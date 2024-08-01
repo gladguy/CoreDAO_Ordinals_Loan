@@ -451,8 +451,6 @@ const Nav = (props) => {
       const isAcExist = await contract.getBitcoinAddressId(metaAddress);
       const isAccountExistInABI = Number(isAcExist.toString());
 
-      // console.log(isBtcExist, isEthExist, isCounterExist, isAccountExistInABI);
-
       if (
         isAccountExistInABI &&
         isEthExist[0] === metaAddress &&
@@ -698,6 +696,7 @@ const Nav = (props) => {
           xl: "space-between",
         }}
         align={"middle"}
+        className="mt-3"
       >
         <Col>
           <Row align={"middle"}>
@@ -780,7 +779,7 @@ const Nav = (props) => {
                   }}
                   ref={ref3}
                 >
-                  Bridge ordinals
+                  Bridge Ordinals
                 </Text>
                 <Text className="font-xsmall color-grey">|</Text>
                 <Text
@@ -788,7 +787,7 @@ const Nav = (props) => {
                     location.pathname.includes("portfolio")
                       ? "headertitle headerStyle"
                       : "font-style headerCompanyName"
-                  } pointer heading-one  `}
+                  } pointer heading-one`}
                   onClick={() => {
                     navigate("/portfolio");
                     dispatch(setLendHeader(false));
@@ -920,23 +919,16 @@ const Nav = (props) => {
           <Text
             className={`${
               breakPoint.xs ? "font-medium" : "font-large"
-            } gradient-text-one biticon heading-one`}
+            } text-color-one biticon heading-one`}
           >
             <RiWallet3Fill
-              color="#8A2F3E"
+              color="#fe9500"
               size={breakPoint.xs ? 27 : 35}
               className="border-radius-5"
             />{" "}
             Connect Wallet{" "}
           </Text>
         </Row>
-
-        {/* <Row justify={"start"} align={"middle"}>
-            <Text className={`font-small text-color-two biticon mt-15`}>
-              Choose how you want to connect. If you don't have a wallet, you
-              can select a provider and create one.
-            </Text>
-          </Row> */}
 
         <Row justify={"start"} align={"middle"}>
           <Text className={`font-small text-color-two biticon mt-15`}>

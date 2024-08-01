@@ -2,7 +2,7 @@ import { Col, Flex, Row, Typography } from "antd";
 import Bars from "react-loading-icons/dist/esm/components/bars";
 import { useSelector } from "react-redux";
 import Bitcoin from "../../assets/coin_logo/brand orange_black bg.png";
-import { getTimeAgo } from "../../utils/common";
+import { calculateOrdinalInCoreDao, getTimeAgo } from "../../utils/common";
 import CustomButton from "../Button";
 import ModalDisplay from "../modal";
 import TableComponent from "../table";
@@ -19,8 +19,8 @@ const OffersModal = ({
   const offers = state.constant.offers;
   const btcvalue = state.constant.btcvalue;
   const coreDaoValue = state.constant.coreDaoValue;
+  const metaAddress = state.wallet.meta.address;
 
-  const BTC_ZERO = process.env.REACT_APP_BTC_ZERO;
   const ETH_ZERO = process.env.REACT_APP_ETH_ZERO;
 
   const activeOffersColumns = [
@@ -50,13 +50,17 @@ const OffersModal = ({
           ? Number(offerModalData.floorPrice)
           : 30000;
 
-        floor = ((floor / BTC_ZERO) * btcvalue) / coreDaoValue;
+        floor = calculateOrdinalInCoreDao(
+          floor,
+          btcvalue,
+          coreDaoValue
+        ).ordinalInBNB;
         const loanAmount = Number(obj.loanAmount) / ETH_ZERO;
         const LTV = ((loanAmount / floor) * 100).toFixed(2);
 
         return (
           <Text className={`text-color-one font-size-16 letter-spacing-small`}>
-            {Number(LTV).toFixed(2)}%
+            {Math.round(Number(LTV))}%
           </Text>
         );
       },
@@ -128,7 +132,11 @@ const OffersModal = ({
                       let floor = Number(offerModalData.floorPrice)
                         ? Number(offerModalData.floorPrice)
                         : 30000;
-                      floor = ((floor / ETH_ZERO) * btcvalue) / coreDaoValue;
+                      floor = calculateOrdinalInCoreDao(
+                        floor,
+                        btcvalue,
+                        coreDaoValue
+                      ).ordinalInBNB;
                       const loanAmount = Number(obj.loanAmount) / ETH_ZERO;
                       const LTV = ((loanAmount / floor) * 100).toFixed(2);
                       return (
@@ -136,7 +144,7 @@ const OffersModal = ({
                           className={
                             "click-btn font-weight-600 letter-spacing-small"
                           }
-                          // disabled={obj.borrower === metaAddress}
+                          disabled={obj.borrower === metaAddress}
                           title={
                             <Flex align="center" justify="center" gap={10}>
                               <span
@@ -152,6 +160,7 @@ const OffersModal = ({
                             setLendModalData({
                               ...obj,
                               ...offerModalData,
+                              floorPrice: floor,
                               LTV: Math.round(LTV),
                             });
                           }}

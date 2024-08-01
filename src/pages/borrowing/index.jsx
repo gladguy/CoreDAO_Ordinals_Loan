@@ -34,6 +34,7 @@ import {
   META_WALLET_KEY,
   TokenContractAddress,
   calculateDailyInterestRate,
+  calculateOrdinalInCoreDao,
 } from "../../utils/common";
 import tokensJson from "../../utils/tokens_abi.json";
 
@@ -210,15 +211,19 @@ const Borrowing = (props) => {
       align: "center",
       dataIndex: "floor",
       render: (_, obj) => {
-        const floor = Number(obj.floorPrice) ? Number(obj.floorPrice) : 30000;
+        const data = calculateOrdinalInCoreDao(
+          Number(obj.floorPrice),
+          btcvalue,
+          coreDaoValue
+        );
         return (
           <Flex align="center" vertical gap={5}>
             <Flex align="center" vertical gap={5} className={"text-color-one"}>
               <Flex align="center" gap={3}>
-                <img src={Bitcoin} alt="noimage" width="20px" />{" "}
-                {(((floor / BTC_ZERO) * btcvalue) / coreDaoValue).toFixed(2)}{" "}
+                <img src={Bitcoin} alt="noimage" width={20} />{" "}
+                {data.ordinalInBNB}
               </Flex>
-              <div>${((floor / BTC_ZERO) * btcvalue).toFixed(2)} </div>
+              ${data.ordinalInUSD}
             </Flex>
           </Flex>
         );
@@ -244,10 +249,11 @@ const Borrowing = (props) => {
               const floor = Number(obj.floorPrice)
                 ? Number(obj.floorPrice)
                 : 30000;
-              const floorPrice = (
-                ((floor / BTC_ZERO) * btcvalue) /
+              const floorPrice = calculateOrdinalInCoreDao(
+                floor,
+                btcvalue,
                 coreDaoValue
-              ).toFixed(2);
+              ).ordinalInBNB;
 
               // Assets
               let assets = collateralData?.filter(
@@ -387,19 +393,6 @@ const Borrowing = (props) => {
           const platformFee = Number(borrowModalData.platformFee);
           const repaymentAmount =
             borrowModalData.amount + Number(borrowModalData.interest);
-          // console.log(
-          //   TokenContractAddress,
-          //   Number(borrowModalData.collectionID),
-          //   borrowModalData.collateral.inscriptionNumber,
-          //   borrowModalData.terms,
-          //   Math.round(amount) * BTC_ZERO,
-          //   Math.round(repaymentAmount * BTC_ZERO),
-          //   Math.round(platformFee * BTC_ZERO)
-          // );
-
-          console.log("Loan Amount = " + amount);
-          console.log("Repayment Amount = " + repaymentAmount);
-          console.log("Platform Fee Amount = " + platformFee);
 
           const Wei_loanAmount = ethers.utils.parseUnits(
             amount.toString(),
@@ -414,10 +407,6 @@ const Borrowing = (props) => {
             "ether"
           ); // 0.01 Core, with 18 decimals
 
-          console.log("Loan Amount = " + Wei_loanAmount);
-          console.log("Repayment Amount = " + Wei_repayAmount);
-          console.log("Platform Fee Amount = " + Wei_platformFee);
-
           const requestResult = await borrowContract.createBorrowRequest(
             TokenContractAddress,
             Number(borrowModalData.collectionID),
@@ -427,17 +416,6 @@ const Borrowing = (props) => {
             Wei_repayAmount,
             Wei_platformFee
           );
-          /*
-          const requestResult = await borrowContract.createBorrowRequest(
-            TokenContractAddress,
-            Number(borrowModalData.collectionID),
-            borrowModalData.collateral.inscriptionNumber,
-            borrowModalData.terms,
-            Math.round(amount) * BTC_ZERO,
-            Math.round(repaymentAmount * BTC_ZERO),
-            Math.round(platformFee * BTC_ZERO)
-          );
-          */
 
           await requestResult.wait();
           if (requestResult.hash) {
@@ -541,8 +519,6 @@ const Borrowing = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeWallet]);
 
-  // console.log("isBorrowApproved", isBorrowApproved);
-  // console.log("borrowModalData", borrowModalData);
   return (
     <>
       <Row justify={"space-between"} align={"middle"}>
@@ -693,7 +669,7 @@ const Borrowing = (props) => {
               <Text
                 className={`font-size-16 text-color-two letter-spacing-small`}
               >
-                {borrowModalData.APY}%
+                {Math.round(borrowModalData.APY)}%
               </Text>
             </Flex>
           </Col>
@@ -758,7 +734,7 @@ const Borrowing = (props) => {
               className={`input-themed amount-input`}
             >
               <Text
-                className={`font-size-16 text-color-one letter-spacing-small`}
+                className={`font-small text-color-one letter-spacing-small`}
               >
                 Amount
               </Text>
@@ -812,7 +788,7 @@ const Borrowing = (props) => {
           <Col md={11}>
             <Flex vertical align="start" className={`input-themed`}>
               <Text
-                className={`font-size-16 text-color-one letter-spacing-small`}
+                className={`font-small text-color-one letter-spacing-small`}
               >
                 Interest
               </Text>

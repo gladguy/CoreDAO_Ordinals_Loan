@@ -3,7 +3,7 @@ import { IoCloudDownload } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import magiceden from "../../assets/brands/magiceden.svg";
 import myordinals from "../../assets/logo/ordinalslogo.png";
-import petra from "../../assets/wallet-logo/petra.png";
+import metamask from "../../assets/wallet-logo/meta.png";
 import unisat from "../../assets/wallet-logo/unisat_logo.png";
 import xverse from "../../assets/wallet-logo/xverse_logo_whitebg.png";
 
@@ -12,7 +12,7 @@ const WalletUI = ({ isAirdrop, isPlugError }) => {
   const unisatLink = process.env.REACT_APP_UNISAT;
   const xverseLink = process.env.REACT_APP_XVERSE;
   const magicedenLink = process.env.REACT_APP_MAGICEDEN;
-  const petraLink = process.env.REACT_APP_PETRA;
+  const metaLink = process.env.REACT_APP_META;
 
   return (
     <>
@@ -22,7 +22,7 @@ const WalletUI = ({ isAirdrop, isPlugError }) => {
           src={myordinals}
           alt="noimage"
           style={{ justifyContent: "center", borderRadius: "25%" }}
-          width="80dvw"
+          width={80}
         />
       </Row>
 
@@ -40,7 +40,7 @@ const WalletUI = ({ isAirdrop, isPlugError }) => {
 
       <Row justify={"center"} align={"middle"} className="mt-7" gutter={10}>
         <Col>
-          <Text className="text-color-two font-small">
+          <Text className="text-color-two font-medium">
             To install wallets, go to portfolio and click download wallets.
           </Text>
         </Col>
@@ -65,14 +65,23 @@ const WalletUI = ({ isAirdrop, isPlugError }) => {
                 <Link
                   className="iconalignment float-up-medium"
                   target="_blank"
-                  to={xverseLink}
+                  to={metaLink}
                 >
                   <img
-                    src={xverse}
+                    src={metamask}
                     alt="logo"
                     className="pointer"
-                    width="50dvw"
+                    width={60}
                   />
+                </Link>
+              </Col>
+              <Col>
+                <Link
+                  className="iconalignment float-up-medium"
+                  target="_blank"
+                  to={xverseLink}
+                >
+                  <img src={xverse} alt="logo" className="pointer" width={45} />
                 </Link>
               </Col>
               <Col>
@@ -81,12 +90,7 @@ const WalletUI = ({ isAirdrop, isPlugError }) => {
                   target="_blank"
                   to={unisatLink}
                 >
-                  <img
-                    src={unisat}
-                    alt="logo"
-                    className="pointer"
-                    width="60dvw"
-                  />
+                  <img src={unisat} alt="logo" className="pointer" width={55} />
                 </Link>
               </Col>
               <Col>
@@ -99,21 +103,7 @@ const WalletUI = ({ isAirdrop, isPlugError }) => {
                     src={magiceden}
                     alt="logo"
                     className="pointer"
-                    width="60dvw"
-                  />
-                </Link>
-              </Col>
-              <Col>
-                <Link
-                  className="iconalignment float-up-medium"
-                  target="_blank"
-                  to={petraLink}
-                >
-                  <img
-                    src={petra}
-                    alt="logo"
-                    className="pointer avatar"
-                    width="60dvw"
+                    width={55}
                   />
                 </Link>
               </Col>
